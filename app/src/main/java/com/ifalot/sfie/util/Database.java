@@ -16,6 +16,7 @@ public class Database {
         try {
             db.execSQL("CREATE TABLE IF NOT EXISTS calendar (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name VARCHAR(255) NOT NULL," +
                     "date BIGINT NOT NULL );");
             db.execSQL("CREATE TABLE IF NOT EXISTS meal (" +
                     "calendarid INTEGER NOT NULL," +
@@ -23,7 +24,7 @@ public class Database {
                     "PRIMARY KEY ('calendarid', 'foodid') );");
             db.execSQL("CREATE TABLE IF NOT EXISTS food (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name INTEGER NOT NULL," +
+                    "name VARCHAR(255) NOT NULL," +
                     "ingredients VARCHAR(1024) NOT NULL );");
             Log.d("Database", "Tables successfully created");
         } catch (SQLException e){

@@ -5,12 +5,18 @@ import java.util.LinkedList;
 
 public class Meal {
 
+    protected enum MealType {
+        LUNCH, DINNER
+    }
+
     private int id;
     private Date date;
+    private MealType type;
     private LinkedList<Food> foods;
 
-    public Meal(Date date){
+    public Meal(Date date, MealType type){
         this.date = date;
+        this.type = type;
         this.foods = new LinkedList<>();
     }
 
