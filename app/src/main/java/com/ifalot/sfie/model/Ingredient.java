@@ -8,6 +8,10 @@ public class Ingredient {
         this.name = name;
     }
 
+    public String getName(){
+        return name;
+    }
+
     @Override
     public int hashCode() {
         return this.name.hashCode();

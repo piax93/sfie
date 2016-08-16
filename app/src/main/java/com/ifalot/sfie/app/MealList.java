@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.ifalot.sfie.R;
+import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Database;
+
+import java.util.Date;
 
 public class MealList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -54,6 +57,10 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
 
             }
         });
+
+        // MealCalendar.getMeals(Generic.getMidnight());
+        MealCalendar calendar = MealCalendar.getMeals(new Date(0));
+
     }
 
     @Override

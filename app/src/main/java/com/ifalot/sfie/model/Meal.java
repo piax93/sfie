@@ -15,9 +15,15 @@ public class Meal {
     private LinkedList<Food> foods;
 
     public Meal(Date date, MealType type){
+        this.id = -1;
         this.date = date;
         this.type = type;
         this.foods = new LinkedList<>();
+    }
+
+    public Meal(Date date, String name){
+        this(date, MealType.DINNER);
+        if(name.toLowerCase().startsWith("lunch")) this.type = MealType.LUNCH;
     }
 
     public void addFood(Food food){
