@@ -2,6 +2,7 @@ package com.ifalot.sfie.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -13,8 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.ifalot.sfie.R;
+import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Database;
+import org.parceler.Parcels;
 
 import java.util.Date;
 
@@ -58,7 +61,6 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
             public void onClick(View view) {
                 Intent i = new Intent(MealList.this, NewMeal.class);
                 startActivityForResult(i, NEW_MEAL_REQCODE);
-                startActivity(i);
             }
         });
 
@@ -85,8 +87,9 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == NEW_MEAL_REQCODE){
-
+        if(requestCode == NEW_MEAL_REQCODE && resultCode == RESULT_OK){
+            Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
+            Toast.makeText(MealList.this, "Woooooaaaa", Toast.LENGTH_SHORT).show();
         }
     }
 }

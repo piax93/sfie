@@ -1,20 +1,21 @@
 package com.ifalot.sfie.model;
 
+import org.parceler.Parcel;
+
 import java.util.Date;
 import java.util.LinkedList;
 
+@Parcel
 public class Meal {
 
-    protected enum MealType {
-        LUNCH, DINNER
-    }
+    int id;
+    long date;
+    String type;
+    LinkedList<Food> foods;
 
-    private int id;
-    private Date date;
-    private MealType type;
-    private LinkedList<Food> foods;
+    public Meal(){}
 
-    public Meal(Date date, MealType type){
+    public Meal(long date, String type){
         this.id = -1;
         this.date = date;
         this.type = type;
@@ -22,12 +23,7 @@ public class Meal {
     }
 
     public Meal(Date date, String name){
-        this(date, MealType.DINNER);
-        if(name.toLowerCase().startsWith("lunch")) this.type = MealType.LUNCH;
-    }
-
-    public Meal(long date, String name){
-        this(new Date(date), name);
+        this(date.getTime(), name);
     }
 
     public void addFood(Food food){
@@ -50,7 +46,7 @@ public class Meal {
     }
 
     public Date getDate(){
-        return date;
+        return new Date(date);
     }
 
 }

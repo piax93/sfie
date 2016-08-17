@@ -1,8 +1,13 @@
 package com.ifalot.sfie.model;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Ingredient {
 
-    private String name;
+    String name;
+
+    public Ingredient(){}
 
     public Ingredient(String name){
         this.name = name;

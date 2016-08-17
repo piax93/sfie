@@ -1,16 +1,21 @@
 package com.ifalot.sfie.model;
 
+import org.parceler.Parcel;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Parcel
 public class Food {
 
     private static String INGR_SEPARATOR = ";";
     private static String INGR_EQUAL = ":";
 
-    private int id;
-    private String name;
-    private HashMap<Ingredient, Float> quantities;
+    int id;
+    String name;
+    HashMap<Ingredient, Float> quantities;
+
+    public Food(){}
 
     public Food(int id, String name){
         this(id, name, null);

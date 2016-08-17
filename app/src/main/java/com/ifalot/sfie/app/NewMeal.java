@@ -1,5 +1,6 @@
 package com.ifalot.sfie.app;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import java.util.TimeZone;
 
 public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public final static String extraNameString = "newMeal";
     private final static int DIALOG_ID = 23;
     private final static String[] meal_type = { "Lunch", "Dinner" };
 
@@ -70,10 +72,11 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         saveMeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Meal meal = new Meal(date, meal_type[typeSpinner.getSelectedItemPosition()] + " " + dateString);
+                Meal meal = new Meal(date, meal_type[typeSpinner.getSelectedItemPosition()]);
                 for(int i = 0; i < foods.size(); i++) meal.addFood(foods.get(i));
                 Intent i = getIntent();
-                i.putExtra("newMeal", Parcels.wrap(meal));
+                i.putExtra(extraNameString, Parcels.wrap(meal));
+                setResult(Activity.RESULT_OK, i);
                 finish();
             }
         });
