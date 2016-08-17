@@ -16,4 +16,8 @@ public class Generic {
         return new Date(now - now % DateUtils.DAY_IN_MILLIS - offset);
     }
 
+    public static long date2Timestamp(int year, int month, int day){
+        return new GregorianCalendar(year, month, day).getTimeInMillis();
+    }
+
 }

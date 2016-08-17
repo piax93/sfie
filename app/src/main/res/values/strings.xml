@@ -2,4 +2,7 @@
     <string name="app_name">SFIE</string>
     <string name="openDrawer">open</string>
     <string name="closeDrawer">close</string>
+    <string name="meal_date">Meal date</string>
+    <string name="add_food">ADD FOOD</string>
+    <string name="save_meal">SAVE MEAL</string>
 </resources>

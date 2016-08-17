@@ -1,5 +1,6 @@
 package com.ifalot.sfie.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import java.util.Date;
 
 public class MealList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private final static int NEW_MEAL_REQCODE = 11;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private int lastItemChecked = 0;
@@ -54,7 +56,9 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(MealList.this, NewMeal.class);
+                startActivityForResult(i, NEW_MEAL_REQCODE);
+                startActivity(i);
             }
         });
 
@@ -78,4 +82,11 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NEW_MEAL_REQCODE){
+
+        }
+    }
 }

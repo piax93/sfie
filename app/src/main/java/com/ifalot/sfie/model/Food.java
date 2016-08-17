@@ -1,7 +1,5 @@
 package com.ifalot.sfie.model;
 
-import org.json.JSONStringer;
-
 import java.util.HashMap;
 import java.util.Map;
 
