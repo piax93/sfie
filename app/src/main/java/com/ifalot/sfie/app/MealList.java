@@ -89,7 +89,7 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == NEW_MEAL_REQCODE && resultCode == RESULT_OK){
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
-            Toast.makeText(MealList.this, "Woooooaaaa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MealList.this, "Woooooaaaa " + m.getDate(), Toast.LENGTH_SHORT).show();
         }
     }
 }

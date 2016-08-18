@@ -1,6 +1,9 @@
 package com.ifalot.sfie.util;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
+import com.ifalot.sfie.app.NewFood;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +21,14 @@ public class Generic {
 
     public static long date2Timestamp(int year, int month, int day){
         return new GregorianCalendar(year, month, day).getTimeInMillis();
+    }
+
+    public static void fastErrorDialog(Context context, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Error");
+        builder.setMessage(message);
+        builder.setNeutralButton("CLOSE", null);
+        builder.show();
     }
 
 }

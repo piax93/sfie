@@ -37,6 +37,10 @@ public class Meal {
         return null;
     }
 
+    public int getFoodCount(){
+        return foods.size();
+    }
+
     public void setId(int id){
         this.id = id;
     }

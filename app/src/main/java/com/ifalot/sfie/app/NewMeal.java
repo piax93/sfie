@@ -5,10 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
@@ -21,17 +19,18 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
 
-public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
     public final static String extraNameString = "newMeal";
+    private final static int NEW_FOOD_CODE = 123;
     private final static int DIALOG_ID = 23;
     private final static String[] meal_type = { "Lunch", "Dinner" };
 
     private long date;
     private String dateString;
     private ArrayList<Food> foods;
+    private ArrayList<Boolean> valid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +38,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         setContentView(R.layout.activity_new_meal);
         setTitle("New Meal");
         foods = new ArrayList<>();
+        valid = new ArrayList<>();
 
         final Spinner typeSpinner = (Spinner) findViewById(R.id.type_spinner);
         typeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, meal_type));
@@ -58,13 +58,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         addFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinearLayout foodWrap = (LinearLayout) findViewById(R.id.foods_wrapper);
-                TextView newFoodTV = new TextView(NewMeal.this);
-                int pad = (int) (12 * getResources().getDisplayMetrics().density + 0.5f);
-                newFoodTV.setPadding(pad, pad, pad, pad);
-                newFoodTV.setText("\u274C\tTEST TV");
-                newFoodTV.setTextSize(19);
-                foodWrap.addView(newFoodTV);
+            startActivityForResult(new Intent(NewMeal.this, NewFood.class), NEW_FOOD_CODE);
             }
         });
 
@@ -73,14 +67,44 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
             @Override
             public void onClick(View view) {
                 Meal meal = new Meal(date, meal_type[typeSpinner.getSelectedItemPosition()]);
-                for(int i = 0; i < foods.size(); i++) meal.addFood(foods.get(i));
-                Intent i = getIntent();
-                i.putExtra(extraNameString, Parcels.wrap(meal));
-                setResult(Activity.RESULT_OK, i);
-                finish();
+                for(int i = 0; i < foods.size(); i++) if(valid.get(i)) meal.addFood(foods.get(i));
+                if(meal.getFoodCount() > 0 && dateString != null && dateString.length() > 0) {
+                    Intent i = getIntent();
+                    i.putExtra(extraNameString, Parcels.wrap(meal));
+                    setResult(Activity.RESULT_OK, i);
+                    finish();
+                }else{
+                    Generic.fastErrorDialog(NewMeal.this, "Some fields are emtpy");
+                }
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NEW_FOOD_CODE && resultCode == RESULT_OK) {
+            Food food = Parcels.unwrap(data.getParcelableExtra(NewFood.newFoodExtraString));
+            LinearLayout foodWrap = (LinearLayout) findViewById(R.id.foods_wrapper);
+            TextView newFoodTV = new TextView(this);
+            int pad = (int) (12 * getResources().getDisplayMetrics().density + 0.5f);
+            newFoodTV.setPadding(pad, pad, pad, pad);
+            newFoodTV.setText("\u274C\t" + food.getName());
+            newFoodTV.setTextSize(19);
+            newFoodTV.setOnClickListener(this);
+            newFoodTV.setTag(foods.size());
+            foods.add(food);
+            valid.add(true);
+            foodWrap.addView(newFoodTV);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        Integer i = (Integer) view.getTag();
+        valid.set(i, false);
+        view.setVisibility(View.GONE);
     }
 
     @Override
@@ -123,5 +147,4 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
                 || (endYear == startYear && endMonth > startMonth)
                 || (endYear == startYear && endMonth == startMonth && endDay >= startDay);
     }
-
 }
