@@ -1,22 +1,23 @@
 package com.ifalot.sfie.app;
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.*;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Food;
 import com.ifalot.sfie.util.Generic;
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 public class NewFood extends AppCompatActivity {
 
     public final static String newFoodExtraString = "newFood";
     private int ingCount = 0;
+    private int nextFoodId;
+    private boolean isNewFood = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,37 @@ public class NewFood extends AppCompatActivity {
 
         Button addIngredient = (Button) findViewById(R.id.button_add_ingredient);
         Button saveFood = (Button) findViewById(R.id.button_save_food);
+        final Spinner preloadedFoods = (Spinner) findViewById(R.id.preloaded_foods);
+        final TextView ingrDisplay = (TextView) findViewById(R.id.ingredients_list);
+        final RelativeLayout newFoodWrap = (RelativeLayout) findViewById(R.id.new_food_wrap);
         final LinearLayout ingWrapper = (LinearLayout) findViewById(R.id.ingredients_wrapper);
+        final ArrayList<Food> foods = Food.getFoodsInDB();
+        nextFoodId = foods.size();
+        foods.add(new Food(-1, "New Food"));
+
+        preloadedFoods.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, foods));
+
+        preloadedFoods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != foods.size()-1) {
+                    isNewFood = false;
+                    ingrDisplay.setText(foods.get(i).getIngredientsInNiceListing());
+                    newFoodWrap.setVisibility(View.GONE);
+                    ingrDisplay.setVisibility(View.VISIBLE);
+                }
+                else {
+                    isNewFood = true;
+                    ingrDisplay.setVisibility(View.GONE);
+                    newFoodWrap.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,30 +69,36 @@ public class NewFood extends AppCompatActivity {
         saveFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText foodName = (EditText) findViewById(R.id.food_name);
-                if(foodName.length() == 0){
-                    Generic.fastErrorDialog(NewFood.this, "Food name can't be empty");
-                    return;
-                }
-                int filledIngr = 0;
-                Food food = new Food(-1, foodName.getText().toString());
-                for (int i = 0; i < ingCount; i++){
-                    LinearLayout ll = (LinearLayout) ingWrapper.getChildAt(i);
-                    EditText ingName = (EditText) ll.getChildAt(0);
-                    EditText ingQty = (EditText) ll.getChildAt(1);
-                    if(ingName.length() > 0 && ingQty.length() > 0){
-                        filledIngr++;
-                        food.addIngredient(ingName.getText().toString(), Float.parseFloat(ingQty.getText().toString()));
+                Food food;
+                if(isNewFood) {
+                    EditText foodName = (EditText) findViewById(R.id.food_name);
+                    if (foodName.length() == 0) {
+                        Generic.fastErrorDialog(NewFood.this, "Food name can't be empty");
+                        return;
                     }
+                    int filledIngr = 0;
+                    food = new Food(nextFoodId, foodName.getText().toString());
+                    for (int i = 0; i < ingCount; i++) {
+                        LinearLayout ll = (LinearLayout) ingWrapper.getChildAt(i);
+                        EditText ingName = (EditText) ll.getChildAt(0);
+                        EditText ingQty = (EditText) ll.getChildAt(1);
+                        if (ingName.length() > 0 && ingQty.length() > 0) {
+                            filledIngr++;
+                            food.addIngredient(ingName.getText().toString(), Float.parseFloat(ingQty.getText().toString()));
+                        }
+                    }
+                    if (filledIngr <= 0) {
+                        Generic.fastErrorDialog(NewFood.this, "Food must contain at least one ingredient");
+                        return;
+                    }
+                    food.insertIntoDatabase();
+                } else {
+                    food = foods.get(preloadedFoods.getSelectedItemPosition());
                 }
-                if(filledIngr > 0) {
-                    Intent i = getIntent();
-                    i.putExtra(newFoodExtraString, Parcels.wrap(food));
-                    setResult(RESULT_OK, i);
-                    finish();
-                }else{
-                    Generic.fastErrorDialog(NewFood.this, "Food must contain at least one ingredient");
-                }
+                Intent i = getIntent();
+                i.putExtra(newFoodExtraString, Parcels.wrap(food));
+                setResult(RESULT_OK, i);
+                finish();
             }
         });
 

@@ -1,7 +1,12 @@
 package com.ifalot.sfie.model;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -41,6 +46,15 @@ public class Meal {
         return foods.size();
     }
 
+    public void insertIntoDatabase() throws SQLiteException {
+        SQLiteDatabase db = Database.getDB();
+        String query = "INSERT INTO meal (calendarid, foodid) VALUES(?, ?)";
+        for(Food f : foods){
+            Integer[] args = { id, f.getId() };
+            db.execSQL(query, args);
+        }
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -53,4 +67,12 @@ public class Meal {
         return new Date(date);
     }
 
+    public String getType(){
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return type + " of " + new SimpleDateFormat("d MMM y").format(new Date(date));
+    }
 }

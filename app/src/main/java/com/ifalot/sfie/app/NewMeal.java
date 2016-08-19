@@ -41,7 +41,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         valid = new ArrayList<>();
 
         final Spinner typeSpinner = (Spinner) findViewById(R.id.type_spinner);
-        typeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, meal_type));
+        typeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, meal_type));
 
         EditText mealDate = (EditText) findViewById(R.id.meal_date);
         mealDate.setInputType(InputType.TYPE_NULL);

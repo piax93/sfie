@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
 
         <item android:id="@+id/test_item"
-              android:title="Test Item"
+              android:title="@string/info"
               android:checked="false"/>
 
     </group>

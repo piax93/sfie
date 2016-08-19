@@ -6,31 +6,42 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import com.ifalot.sfie.util.Database;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 public class MealCalendar {
 
-    private HashMap<Integer, Meal> meals;
+    private TreeMap<Integer, Meal> meals;
     private int topid;
 
-    public MealCalendar(){
+    private MealCalendar(){
         topid = -1;
-        meals = new HashMap<>();
+        meals = new TreeMap<>();
     }
 
     public void addMeal(Meal meal){
         int tmpId = meal.getId();
         if (tmpId >= topid) topid = tmpId + 1;
-        if (tmpId == -1) meal.setId(topid);
+        if (tmpId == -1) {
+            meal.setId(topid);
+            String query = "INSERT INTO calendar VALUES(?, ?, ?)";
+            SQLiteDatabase db = Database.getDB();
+            Object[] args = { topid, meal.getType(), meal.getDate().getTime() };
+            db.execSQL(query, args);
+            topid++;
+            meal.insertIntoDatabase();
+        }
         meals.put(meal.getId(), meal);
     }
 
-    public static MealCalendar getMeals(Date today){
+    public ArrayList<Meal> getMeals(){
+        return new ArrayList<>(meals.values());
+    }
+
+    public static MealCalendar getMealCalendar(Date today){
         MealCalendar tmp = new MealCalendar();
         SQLiteDatabase db = Database.getDB();
         Cursor cursor = null, mealCursor = null;
-        String query = "SELECT id, name, date FROM calendar WHERE date >= ?";
+        String query = "SELECT id, name, date FROM calendar WHERE date >= ? ORDER BY date";
         String subquery = "SELECT id, name, ingredients FROM meal, food WHERE calendarid = ?";
         String[] selectionArgs = {String.valueOf(today.getTime())};
         try {
@@ -45,13 +56,14 @@ public class MealCalendar {
                     meal.setId(mealId);
                     mealCursor = db.rawQuery(subquery, subArgs);
                     if(mealCursor.moveToFirst()){
-                        do{
+                        do {
                             int foodid = mealCursor.getInt(0);
                             String foodName = mealCursor.getString(1);
                             String ingrs = mealCursor.getString(2);
                             meal.addFood(new Food(foodid, foodName, ingrs));
                         } while (mealCursor.moveToNext());
                     }
+                    tmp.addMeal(meal);
                 } while (cursor.moveToNext());
             }
         } catch (SQLiteException e) {

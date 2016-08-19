@@ -1,15 +1,21 @@
 package com.ifalot.sfie.model;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Parcel
 public class Food {
 
-    private static String INGR_SEPARATOR = ";";
-    private static String INGR_EQUAL = ":";
+    private static final String INGR_SEPARATOR = ";";
+    private static final String INGR_EQUAL = ":";
 
     int id;
     String name;
@@ -40,7 +46,7 @@ public class Food {
     }
 
     public String getIngredientsString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int i = 0;
         for(Map.Entry<Ingredient, Float> e : quantities.entrySet()){
             i++;
@@ -48,6 +54,27 @@ public class Food {
             if(i != quantities.size()) sb.append(INGR_SEPARATOR);
         }
         return sb.toString();
+    }
+
+    public String getIngredientsInNiceListing(){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for(Map.Entry<Ingredient, Float> e : quantities.entrySet()){
+            i++;
+            Object value;
+            if(Math.abs(Math.round(e.getValue()) - e.getValue()) < 0.0001) value = e.getValue().intValue();
+            else value = e.getValue();
+            sb.append("- ").append(e.getKey().getName()).append(":  ").append(value);
+            if(i != quantities.size()) sb.append('\n');
+        }
+        return sb.toString();
+    }
+
+    public void insertIntoDatabase() throws SQLiteException {
+        SQLiteDatabase db = Database.getDB();
+        String query = "INSERT INTO food (id, name, ingredients) VALUES(?, ?, ?)";
+        Object[] args = { id, name, getIngredientsString() };
+        db.execSQL(query, args);
     }
 
     public float getQuantity(String ingredient){
@@ -62,8 +89,25 @@ public class Food {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public int getId(){
         return id;
+    }
+
+    public static ArrayList<Food> getFoodsInDB(){
+        SQLiteDatabase db = Database.getDB();
+        String query = "SELECT * FROM food";
+        Cursor c = db.rawQuery(query, null);
+        ArrayList<Food> res = new ArrayList<>();
+        if(c.moveToFirst()){
+            do res.add(new Food(c.getInt(0), c.getString(1), c.getString(2)));
+            while (c.moveToNext());
+        }
+        return res;
     }
 
 }

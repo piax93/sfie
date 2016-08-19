@@ -2,7 +2,6 @@ package com.ifalot.sfie.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -12,11 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Database;
+import com.ifalot.sfie.util.Generic;
 import org.parceler.Parcels;
 
 import java.util.Date;
@@ -27,6 +29,8 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private int lastItemChecked = 0;
+    private MealCalendar calendar;
+    private ArrayAdapter<Meal> mealArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         Toolbar toolbar = (Toolbar) findViewById(R.id.meal_list_toolbar);
         setSupportActionBar(toolbar);
         try { getSupportActionBar().setElevation(18.0f); }
-        catch (NullPointerException e) { Log.d("MealList", "Cant set toolbar elevation"); }
+        catch (NullPointerException e) { Log.d("MealList", "Cant set toolbar elevation:" + e.getMessage()); }
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.meal_list_drawer);
@@ -64,8 +68,11 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-        // MealCalendar.getMeals(Generic.getMidnight());
-        MealCalendar calendar = MealCalendar.getMeals(new Date(0));
+        calendar = MealCalendar.getMealCalendar(Generic.getMidnight());
+
+        ListView lv = (ListView) findViewById(R.id.meal_list);
+        mealArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, calendar.getMeals());
+        lv.setAdapter(mealArrayAdapter);
 
     }
 
@@ -89,6 +96,8 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == NEW_MEAL_REQCODE && resultCode == RESULT_OK){
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
+            calendar.addMeal(m);
+            mealArrayAdapter.add(m);
             Toast.makeText(MealList.this, "Woooooaaaa " + m.getDate(), Toast.LENGTH_SHORT).show();
         }
     }

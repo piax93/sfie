@@ -3,9 +3,7 @@ package com.ifalot.sfie.util;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
-import com.ifalot.sfie.app.NewFood;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
