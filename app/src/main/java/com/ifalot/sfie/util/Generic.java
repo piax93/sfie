@@ -14,6 +14,7 @@ public class Generic {
         long now = new Date().getTime();
         TimeZone tz = new GregorianCalendar().getTimeZone();
         int offset = tz.getRawOffset() + tz.getDSTSavings();
+        now = now + offset;
         return new Date(now - now % DateUtils.DAY_IN_MILLIS - offset);
     }
 

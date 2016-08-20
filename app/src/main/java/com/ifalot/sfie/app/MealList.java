@@ -1,16 +1,19 @@
 package com.ifalot.sfie.app;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,8 +23,6 @@ import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Database;
 import com.ifalot.sfie.util.Generic;
 import org.parceler.Parcels;
-
-import java.util.Date;
 
 public class MealList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,6 +74,25 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         ListView lv = (ListView) findViewById(R.id.meal_list);
         mealArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, calendar.getMeals());
         lv.setAdapter(mealArrayAdapter);
+
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MealList.this);
+                builder.setTitle("Delete Meal");
+                builder.setMessage("Are you sure you want to delete '" + mealArrayAdapter.getItem(i).toString() + "' ?");
+                builder.setNegativeButton("No", null);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int j) {
+                        mealArrayAdapter.getItem(i).deleteFromDatabase();
+                        mealArrayAdapter.remove(mealArrayAdapter.getItem(i));
+                    }
+                });
+                builder.show();
+                return false;
+            }
+        });
 
     }
 

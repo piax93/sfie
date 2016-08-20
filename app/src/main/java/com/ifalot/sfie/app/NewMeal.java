@@ -139,6 +139,8 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
             dateString = String.valueOf(year) + '-' + (monthOfYear + 1) + '-' + dayOfMonth;
             date = Generic.date2Timestamp(year, monthOfYear, dayOfMonth);
             et.setText(dateString);
+        } else {
+            Generic.fastErrorDialog(this, "You can't change the past, sorry");
         }
     }
 

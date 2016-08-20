@@ -55,6 +55,18 @@ public class Meal {
         }
     }
 
+    public void deleteFromDatabase(){
+        SQLiteDatabase db = Database.getDB();
+        Object[] args = { id };
+        String mquery = "DELETE FROM meal WHERE calendarid = ?";
+        String cquery = "DELETE FROM calendar WHERE id = ?";
+        db.beginTransaction();
+        db.execSQL(mquery, args);
+        db.execSQL(cquery, args);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -75,4 +87,11 @@ public class Meal {
     public String toString() {
         return type + " of " + new SimpleDateFormat("d MMM y").format(new Date(date));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Meal) return id == ((Meal)obj).getId();
+        return false;
+    }
+
 }
