@@ -1,22 +1,27 @@
 package com.ifalot.sfie.app;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
@@ -24,63 +29,39 @@ import com.ifalot.sfie.util.Database;
 import com.ifalot.sfie.util.Generic;
 import org.parceler.Parcels;
 
-public class MealList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MealList extends Fragment {
 
     private final static int NEW_MEAL_REQCODE = 11;
-    private NavigationView navigationView;
-    private DrawerLayout drawerLayout;
-    private int lastItemChecked = 0;
     private MealCalendar calendar;
     private ArrayAdapter<Meal> mealArrayAdapter;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meal_list);
-        Database.initDatabase(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_meal_list, container, false);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.meal_list_toolbar);
-        setSupportActionBar(toolbar);
-        try { getSupportActionBar().setElevation(18.0f); }
-        catch (NullPointerException e) { Log.d("MealList", "Cant set toolbar elevation:" + e.getMessage()); }
-
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        drawerLayout = (DrawerLayout) findViewById(R.id.meal_list_drawer);
-
-        navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.openDrawer, R.string.closeDrawer){
-            @Override
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                if(lastItemChecked != 0)
-                    navigationView.getMenu().findItem(lastItemChecked).setChecked(false);
-            }
-        };
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_add_meal);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.button_add_meal);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MealList.this, NewMeal.class);
+                Intent i = new Intent(MealList.this.getContext(), NewMeal.class);
                 startActivityForResult(i, NEW_MEAL_REQCODE);
             }
         });
 
         calendar = MealCalendar.getMealCalendar(Generic.getMidnight());
 
-        ListView lv = (ListView) findViewById(R.id.meal_list);
-        mealArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, calendar.getMeals());
+        ListView lv = (ListView) rootView.findViewById(R.id.meal_list);
+        mealArrayAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, calendar.getMeals());
         lv.setAdapter(mealArrayAdapter);
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MealList.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MealList.this.getContext());
                 builder.setTitle("Delete Meal");
-                builder.setMessage("Are you sure you want to delete '" + mealArrayAdapter.getItem(i).toString() + "' ?");
+                builder.setMessage("Are you sure you want to delete '" +
+                        mealArrayAdapter.getItem(i).toString() + "' ?");
                 builder.setNegativeButton("No", null);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -97,33 +78,19 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MealList.this, MealDetail.class);
+                Intent intent = new Intent(MealList.this.getContext(), MealDetail.class);
                 intent.putExtra(MealDetail.mealData, Parcels.wrap(mealArrayAdapter.getItem(i)));
                 startActivity(intent);
             }
         });
 
+        return rootView;
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        item.setChecked(true);
-        lastItemChecked = item.getItemId();
-        int id = item.getItemId();
-        drawerLayout.closeDrawers();
-        switch (id) {
-            case R.id.test_item:
-                Toast.makeText(this, "Ciaooooo", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == NEW_MEAL_REQCODE && resultCode == RESULT_OK){
+        if(requestCode == NEW_MEAL_REQCODE && resultCode == Activity.RESULT_OK){
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
             calendar.addMeal(m);
             mealArrayAdapter.add(m);

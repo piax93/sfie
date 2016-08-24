@@ -9,24 +9,29 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity
-                android:name=".app.MealList"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppThemeNoActionBar">
+
+        <activity android:name=".app.MainActivity"
+                  android:theme="@style/AppThemeNoActionBar"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
                 android:name=".app.NewMeal"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".app.NewFood">
+
+        <activity android:name=".app.NewFood"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".app.MealDetail">
+
+        <activity android:name=".app.MealDetail"
+                  android:screenOrientation="portrait">
         </activity>
+
     </application>
 
 </manifest>

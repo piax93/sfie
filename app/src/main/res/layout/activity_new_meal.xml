@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/button_add_food"
                 android:text="@string/add_food"
+                android:layout_marginTop="5dp"
                 android:layout_below="@+id/foods_wrapper"
                 android:layout_centerHorizontal="true"/>
 

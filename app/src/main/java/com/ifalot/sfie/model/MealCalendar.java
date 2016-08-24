@@ -14,20 +14,18 @@ public class MealCalendar {
     private int topid;
 
     private MealCalendar(){
-        topid = -1;
+        topid = 0;
         meals = new TreeMap<>();
     }
 
     public void addMeal(Meal meal){
-        int tmpId = meal.getId();
-        if (tmpId >= topid) topid = tmpId + 1;
-        if (tmpId == -1) {
+        if (meal.getId() == -1) {
+            topid++;
             meal.setId(topid);
             String query = "INSERT INTO calendar VALUES(?, ?, ?)";
             SQLiteDatabase db = Database.getDB();
             Object[] args = { topid, meal.getType(), meal.getDate().getTime() };
             db.execSQL(query, args);
-            topid++;
             meal.insertIntoDatabase();
         }
         meals.put(meal.getId(), meal);
@@ -37,12 +35,17 @@ public class MealCalendar {
         return new ArrayList<>(meals.values());
     }
 
+    private void setTopId(int topid){
+        this.topid = topid;
+    }
+
     public static MealCalendar getMealCalendar(Date today){
         MealCalendar tmp = new MealCalendar();
         SQLiteDatabase db = Database.getDB();
         Cursor cursor = null, mealCursor = null;
         String query = "SELECT id, name, date FROM calendar WHERE date >= ? ORDER BY date";
         String subquery = "SELECT id, name, ingredients FROM meal, food WHERE calendarid = ?";
+        String topidquery = "SELECT MAX(id) FROM calendar";
         String[] selectionArgs = {String.valueOf(today.getTime())};
         try {
             cursor = db.rawQuery(query, selectionArgs);
@@ -66,6 +69,10 @@ public class MealCalendar {
                     tmp.addMeal(meal);
                 } while (cursor.moveToNext());
             }
+            cursor.close();
+            cursor = db.rawQuery(topidquery, null);
+            cursor.moveToFirst();
+            tmp.setTopId(cursor.getInt(0));
         } catch (SQLiteException e) {
             Log.d("MealCalendar", "Failed to read database");
         } finally {
