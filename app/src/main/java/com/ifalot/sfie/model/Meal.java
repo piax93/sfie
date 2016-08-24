@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Set;
 
 @Parcel
 public class Meal {
@@ -53,6 +54,22 @@ public class Meal {
             Integer[] args = { id, f.getId() };
             db.execSQL(query, args);
         }
+    }
+
+    public String getFoodDetails(){
+        StringBuilder sb = new StringBuilder();
+        for(Food f : foods){
+            int i = 0;
+            sb.append("- ").append(f.getName()).append(" -> ");
+            Set<Ingredient> ingrs = f.getIngredients();
+            for(Ingredient ing : ingrs) {
+                i++;
+                sb.append(ing.getName());
+                if(i != ingrs.size()) sb.append(", ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     public void deleteFromDatabase(){

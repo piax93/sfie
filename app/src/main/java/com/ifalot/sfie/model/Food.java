@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteException;
 import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Parcel
 public class Food {
@@ -68,6 +65,10 @@ public class Food {
             if(i != quantities.size()) sb.append('\n');
         }
         return sb.toString();
+    }
+
+    public Set<Ingredient> getIngredients(){
+        return quantities.keySet();
     }
 
     public void insertIntoDatabase() throws SQLiteException {

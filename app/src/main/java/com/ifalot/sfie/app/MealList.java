@@ -94,6 +94,15 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MealList.this, MealDetail.class);
+                intent.putExtra(MealDetail.mealData, Parcels.wrap(mealArrayAdapter.getItem(i)));
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -118,7 +127,6 @@ public class MealList extends AppCompatActivity implements NavigationView.OnNavi
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
             calendar.addMeal(m);
             mealArrayAdapter.add(m);
-            Toast.makeText(MealList.this, "Woooooaaaa " + m.getDate(), Toast.LENGTH_SHORT).show();
         }
     }
 }
