@@ -17,8 +17,10 @@ public class SFIEPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int index) {
-        if(index == 0) return new MealList();
-        else return new FridgeListing();
+        Fragment f;
+        if(index == 0) f = new MealList();
+        else f = new FridgeListing();
+        return f;
     }
 
     @Override

@@ -7,9 +7,7 @@ import org.parceler.Parcel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 @Parcel
 public class Meal {
@@ -49,10 +47,16 @@ public class Meal {
 
     public void insertIntoDatabase() throws SQLiteException {
         SQLiteDatabase db = Database.getDB();
-        String query = "INSERT INTO meal (calendarid, foodid) VALUES(?, ?)";
-        for(Food f : foods){
-            Integer[] args = { id, f.getId() };
-            db.execSQL(query, args);
+        try {
+            String query = "INSERT INTO meal (calendarid, foodid) VALUES(?, ?)";
+            db.beginTransaction();
+            for (Food f : foods) {
+                Integer[] args = {id, f.getId()};
+                db.execSQL(query, args);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
     }
 
@@ -74,14 +78,31 @@ public class Meal {
 
     public void deleteFromDatabase(){
         SQLiteDatabase db = Database.getDB();
-        Object[] args = { id };
-        String mquery = "DELETE FROM meal WHERE calendarid = ?";
-        String cquery = "DELETE FROM calendar WHERE id = ?";
-        db.beginTransaction();
-        db.execSQL(mquery, args);
-        db.execSQL(cquery, args);
-        db.setTransactionSuccessful();
-        db.endTransaction();
+        try {
+            Object[] args = {id};
+            String mquery = "DELETE FROM meal WHERE calendarid = ?";
+            String cquery = "DELETE FROM calendar WHERE id = ?";
+            db.beginTransaction();
+            db.execSQL(mquery, args);
+            db.execSQL(cquery, args);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public HashMap<Ingredient, Float> getNeededIngredients(){
+        HashMap<Ingredient, Float> res = new HashMap<>();
+        for(Food f : foods){
+            for(Map.Entry<Ingredient, Float> e : f.getQuantities().entrySet()){
+                if(res.containsKey(e.getKey())){
+                    res.put(e.getKey(), e.getValue() + res.get(e.getKey()));
+                } else {
+                    res.put(e.getKey(), e.getValue());
+                }
+            }
+        }
+        return res;
     }
 
     public void setId(int id){

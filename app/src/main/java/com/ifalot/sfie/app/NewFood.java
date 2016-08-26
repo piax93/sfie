@@ -3,7 +3,15 @@ package com.ifalot.sfie.app;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.method.BaseKeyListener;
+import android.text.method.KeyListener;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Food;
@@ -12,7 +20,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class NewFood extends AppCompatActivity {
+public class NewFood extends AppCompatActivity implements InputFilter {
 
     public final static String newFoodExtraString = "newFood";
     private int ingCount = 0;
@@ -61,7 +69,9 @@ public class NewFood extends AppCompatActivity {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getLayoutInflater().inflate(R.layout.ingredient_wrapper, ingWrapper);
+                ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.ingredient_wrapper, ingWrapper)).getChildAt(0);
+                EditText et = (EditText) v.getChildAt(0);
+                et.setFilters(new InputFilter[] {NewFood.this});
                 ingCount++;
             }
         });
@@ -105,4 +115,12 @@ public class NewFood extends AppCompatActivity {
         addIngredient.performClick();
 
     }
+
+    @Override
+    public CharSequence filter(CharSequence charSequence, int start, int end, Spanned spanned, int i2, int i3) {
+        char c = charSequence.charAt(end-1);
+        if(c == Food.INGR_EQUAL || c == Food.INGR_SEPARATOR) return "";
+        return null;
+    }
+
 }

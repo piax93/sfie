@@ -11,8 +11,8 @@ import java.util.*;
 @Parcel
 public class Food {
 
-    private static final String INGR_SEPARATOR = ";";
-    private static final String INGR_EQUAL = ":";
+    public static final char INGR_SEPARATOR = ';';
+    public static final char INGR_EQUAL = ':';
 
     int id;
     String name;
@@ -29,9 +29,9 @@ public class Food {
         this.name = name;
         quantities = new HashMap<>();
         if(ingredients != null){
-            String[] ingrs = ingredients.split(INGR_SEPARATOR);
+            String[] ingrs = ingredients.split(String.valueOf(INGR_SEPARATOR));
             for(String i : ingrs){
-                String[] tmp = i.split(INGR_EQUAL);
+                String[] tmp = i.split(String.valueOf(INGR_EQUAL));
                 quantities.put(new Ingredient(tmp[0]), Float.valueOf(tmp[1]));
             }
         }
@@ -69,6 +69,10 @@ public class Food {
 
     public Set<Ingredient> getIngredients(){
         return quantities.keySet();
+    }
+
+    public HashMap<Ingredient, Float> getQuantities() {
+        return quantities;
     }
 
     public void insertIntoDatabase() throws SQLiteException {

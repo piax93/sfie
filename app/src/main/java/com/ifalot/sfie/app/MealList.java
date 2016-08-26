@@ -35,7 +35,6 @@ public class MealList extends Fragment {
     private MealCalendar calendar;
     private ArrayAdapter<Meal> mealArrayAdapter;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_meal_list, container, false);

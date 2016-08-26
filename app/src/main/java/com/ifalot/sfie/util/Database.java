@@ -26,6 +26,9 @@ public class Database {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name VARCHAR(255) NOT NULL, " +
                     "ingredients VARCHAR(1024) NOT NULL );");
+            db.execSQL("CREATE TABLE IF NOT EXISTS fridge (" +
+                    "name VARCHAR(255) PRIMARY KEY, " +
+                    "quantity REAL NOT NULL );");
             Log.d("Database", "Tables successfully created");
         } catch (SQLException e){
             Log.d("Database", "Failed to init database: " + e);
