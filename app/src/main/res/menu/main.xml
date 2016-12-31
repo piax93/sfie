@@ -8,6 +8,10 @@
               android:checkable="false"
               android:checked="false"/>
 
+        <item android:id="@+id/showall"
+              android:title="@string/show_past"
+              android:checkable="true"/>
+
     </group>
 
 </menu>

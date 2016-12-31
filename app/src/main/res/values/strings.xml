@@ -14,4 +14,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="show_past">Show Past</string>
+    <string name="title_activity_shopping">Shopping</string>
+    <string name="done_shopping">Done Shopping</string>
+    <string name="add_material">Add Shop Item</string>
 </resources>

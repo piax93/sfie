@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin" >
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:id="@+id/shopping_wrapper"
+                          android:layout_alignParentTop="true"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"/>
+
+            <Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_add_material"
+                    android:text="@string/add_material"
+                    android:layout_below="@id/shopping_wrapper"
+                    android:layout_centerHorizontal="true"/>
+
+            <Button android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_save_shopping"
+                    android:text="@string/done_shopping"
+                    android:layout_below="@id/button_add_material"
+                    android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
+</ScrollView>

@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteException;
 import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -34,6 +33,10 @@ public class Meal {
         foods.add(food);
     }
 
+    public List<Food> getFoods(){
+        return foods;
+    }
+
     public Food getFood(String name){
         for(Food f : foods){
             if(f.getName().equals(name)) return f;
@@ -60,15 +63,15 @@ public class Meal {
         }
     }
 
-    public String getFoodDetails(){
+    public String getFoodDetailsToString(){
         StringBuilder sb = new StringBuilder();
         for(Food f : foods){
             int i = 0;
             sb.append("- ").append(f.getName()).append(" -> ");
-            Set<Ingredient> ingrs = f.getIngredients();
-            for(Ingredient ing : ingrs) {
+            Set<String> ingrs = f.getIngredients();
+            for(String ing : ingrs) {
                 i++;
-                sb.append(ing.getName());
+                sb.append(ing);
                 if(i != ingrs.size()) sb.append(", ");
             }
             sb.append("\n");
@@ -91,10 +94,10 @@ public class Meal {
         }
     }
 
-    public HashMap<Ingredient, Float> getNeededIngredients(){
-        HashMap<Ingredient, Float> res = new HashMap<>();
+    public HashMap<String, Float> getNeededIngredients(){
+        HashMap<String, Float> res = new HashMap<>();
         for(Food f : foods){
-            for(Map.Entry<Ingredient, Float> e : f.getQuantities().entrySet()){
+            for(Map.Entry<String, Float> e : f.getQuantities().entrySet()){
                 if(res.containsKey(e.getKey())){
                     res.put(e.getKey(), e.getValue() + res.get(e.getKey()));
                 } else {

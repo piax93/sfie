@@ -1,22 +1,15 @@
 package com.ifalot.sfie.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,9 +18,10 @@ import android.widget.ListView;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
-import com.ifalot.sfie.util.Database;
 import com.ifalot.sfie.util.Generic;
 import org.parceler.Parcels;
+
+import java.util.Date;
 
 public class MealList extends Fragment {
 
@@ -48,10 +42,9 @@ public class MealList extends Fragment {
             }
         });
 
-        calendar = MealCalendar.getMealCalendar(Generic.getMidnight());
-
+        mealArrayAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1);
+        update();
         ListView lv = (ListView) rootView.findViewById(R.id.meal_list);
-        mealArrayAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, calendar.getMeals());
         lv.setAdapter(mealArrayAdapter);
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -65,12 +58,14 @@ public class MealList extends Fragment {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
+                        FridgeListing.fridge.vomit(mealArrayAdapter.getItem(i));
+                        FridgeListing.fridgeListAdapter.update();
                         mealArrayAdapter.getItem(i).deleteFromDatabase();
                         mealArrayAdapter.remove(mealArrayAdapter.getItem(i));
                     }
                 });
                 builder.show();
-                return false;
+                return true;
             }
         });
 
@@ -93,6 +88,17 @@ public class MealList extends Fragment {
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
             calendar.addMeal(m);
             mealArrayAdapter.add(m);
+            FridgeListing.fridge.consume(m);
+            FridgeListing.fridgeListAdapter.update();
         }
     }
+
+    public void update(){
+        calendar = MealCalendar.getMealCalendar(getContext().getSharedPreferences("global", Context.MODE_PRIVATE)
+                .getBoolean("showAll", false) ? new Date(0) : Generic.getMidnight());
+        mealArrayAdapter.clear();
+        mealArrayAdapter.addAll(calendar.getMeals());
+    }
+
+
 }

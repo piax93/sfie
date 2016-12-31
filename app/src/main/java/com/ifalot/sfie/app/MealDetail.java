@@ -2,7 +2,8 @@ package com.ifalot.sfie.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Meal;
 import org.parceler.Parcels;
@@ -19,8 +20,8 @@ public class MealDetail extends AppCompatActivity {
         Meal meal = Parcels.unwrap(getIntent().getParcelableExtra(mealData));
         setTitle(meal.toString());
 
-        TextView tv = (TextView) findViewById(R.id.meal_detail_textview);
-        tv.setText(meal.getFoodDetails());
+        ListView lv = (ListView) findViewById(R.id.meal_detail_list);
+        lv.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, meal.getFoods()));
 
     }
 }

@@ -15,7 +15,7 @@ import com.ifalot.sfie.util.SFIEPageAdapter;
 
 public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItemClickListener {
 
-    private String[] tabs = { "MEAL LIST", "STOCK" };
+    private String[] tabs = { "MEAL LIST", "FRIDGE" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,7 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
         setContentView(R.layout.activity_main);
 
         Database.initDatabase(this);
+        getSharedPreferences("global", MODE_PRIVATE).edit().putBoolean("showAll", false).apply();
 
         SFIEPageAdapter pageAdapter = new SFIEPageAdapter(getSupportFragmentManager(), tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
@@ -33,7 +34,6 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
         toolbar.setTitle("SFIE");
         toolbar.inflateMenu(R.menu.main);
         toolbar.setOnMenuItemClickListener(this);
-
     }
 
     @Override
@@ -47,6 +47,11 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
                 builder.setMessage(s);
                 builder.show();
                 break;
+            case R.id.showall:
+                boolean check = !item.isChecked();
+                getSharedPreferences("global", MODE_PRIVATE).edit().putBoolean("showAll", check).apply();
+                item.setChecked(check);
+                ((MealList) getSupportFragmentManager().getFragments().get(0)).update();
             default:
                 break;
         }

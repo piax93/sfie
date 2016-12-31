@@ -8,12 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Fridge;
-import com.ifalot.sfie.model.Ingredient;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class FridgeListAdapter extends ArrayAdapter<Ingredient> {
+public class FridgeListAdapter extends ArrayAdapter<String> {
 
     private Fridge fridge;
 
@@ -29,11 +27,16 @@ public class FridgeListAdapter extends ArrayAdapter<Ingredient> {
         if(convertView == null) view = inflater.inflate(R.layout.fridge_list_item, parent, false);
         else view = convertView;
 
-        Ingredient ing = this.getItem(position);
-        ((TextView)view.findViewById(R.id.ingr_tv)).setText(ing.getName());
+        String ing = this.getItem(position);
+        ((TextView)view.findViewById(R.id.ingr_tv)).setText(ing);
         ((TextView)view.findViewById(R.id.quant_tv)).setText(fridge.getQuantity(ing).toString());
 
         return view;
+    }
+
+    public void update(){
+        super.clear();
+        super.addAll(new ArrayList<>(fridge.getSupplies().keySet()));
     }
 
 }

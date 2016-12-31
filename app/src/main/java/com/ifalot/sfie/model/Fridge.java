@@ -13,15 +13,17 @@ import java.util.Map;
 public class Fridge {
 
     public static final String theEndTag = "theend";
-    private HashMap<Ingredient, Float> supplies;
+    private HashMap<String, Float> supplies;
     private Date theEnd;
+    private boolean modified;
 
     Fridge(){
         theEnd = null;
+        modified = false;
         supplies = new HashMap<>();
     }
 
-    public HashMap<Ingredient, Float> getSupplies(){
+    public HashMap<String, Float> getSupplies(){
         return this.supplies;
     }
 
@@ -30,9 +32,9 @@ public class Fridge {
     }
 
     public void consume(Meal meal){
+        modified = true;
         boolean neg = false;
-        HashMap<Ingredient, Float> required = meal.getNeededIngredients();
-        for(Map.Entry<Ingredient, Float> e : required.entrySet()) {
+        for(Map.Entry<String, Float> e : meal.getNeededIngredients().entrySet()) {
             Float base = 0f;
             if (supplies.containsKey(e.getKey())) base = supplies.get(e.getKey());
             base = base - e.getValue();
@@ -45,21 +47,34 @@ public class Fridge {
         }
     }
 
-    public void addSupply(Ingredient ingredient, float quantity){
+    public void vomit(Meal meal){
+        modified = true;
+        for(Map.Entry<String, Float> e : meal.getNeededIngredients().entrySet()){
+            Float base = 0f;
+            if (supplies.containsKey(e.getKey())) base = supplies.get(e.getKey());
+            base = base + e.getValue();
+            supplies.put(e.getKey(), base);
+        }
+    }
+
+    public void addSupply(String ingredient, float quantity){
+        modified = true;
+        if(supplies.containsKey(ingredient)) quantity += supplies.get(ingredient);
         supplies.put(ingredient, quantity);
     }
 
-    public Float getQuantity(Ingredient ingredient){
+    public Float getQuantity(String ingredient){
         return supplies.get(ingredient);
     }
 
     public void save(){
+        if(!modified) return;
         String query = "INSERT OR REPLACE INTO fridge (name, quantity) VALUES(?,?)";
         SQLiteDatabase db = Database.getDB();
         try {
             db.beginTransaction();
-            for(Map.Entry<Ingredient, Float> e : supplies.entrySet()){
-                Object[] args = { e.getKey().getName(), e.getValue() };
+            for(Map.Entry<String, Float> e : supplies.entrySet()){
+                Object[] args = { e.getKey(), e.getValue() };
                 db.execSQL(query, args);
             }
             if(theEnd != null){
@@ -82,7 +97,7 @@ public class Fridge {
                 do {
                     String name = c.getString(0);
                     if(name.equals(theEndTag)) f.setTheEnd(Float.valueOf(c.getFloat(1)).longValue());
-                    else f.addSupply(new Ingredient(name), c.getFloat(1));
+                    else f.addSupply(name, c.getFloat(1));
                 } while (c.moveToNext());
             }
         } catch (SQLiteException e){
