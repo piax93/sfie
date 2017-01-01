@@ -89,6 +89,7 @@ public class Fridge {
         try {
             db.beginTransaction();
             for(Map.Entry<String, Float> e : supplies.entrySet()){
+                if(e.getKey().equals(theEndTag)) continue;
                 Object[] args = { e.getKey(), e.getValue() };
                 db.execSQL(query, args);
             }
