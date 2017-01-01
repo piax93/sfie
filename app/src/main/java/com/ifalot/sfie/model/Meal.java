@@ -11,6 +11,8 @@ import java.util.*;
 @Parcel
 public class Meal {
 
+    public final static String[] meal_type = { "Lunch", "Dinner" };
+
     int id;
     long date;
     String type;

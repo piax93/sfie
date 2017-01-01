@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.ifalot.sfie.R;
+import com.ifalot.sfie.model.Fridge;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Generic;
@@ -58,8 +59,7 @@ public class MealList extends Fragment {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
-                        FridgeListing.fridge.vomit(mealArrayAdapter.getItem(i));
-                        FridgeListing.fridgeListAdapter.update();
+                        Fridge.getInstance().vomit(mealArrayAdapter.getItem(i));
                         mealArrayAdapter.getItem(i).deleteFromDatabase();
                         mealArrayAdapter.remove(mealArrayAdapter.getItem(i));
                     }
@@ -88,8 +88,7 @@ public class MealList extends Fragment {
             Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
             calendar.addMeal(m);
             mealArrayAdapter.add(m);
-            FridgeListing.fridge.consume(m);
-            FridgeListing.fridgeListAdapter.update();
+            Fridge.getInstance().consume(m);
         }
     }
 
@@ -99,6 +98,5 @@ public class MealList extends Fragment {
         mealArrayAdapter.clear();
         mealArrayAdapter.addAll(calendar.getMeals());
     }
-
 
 }

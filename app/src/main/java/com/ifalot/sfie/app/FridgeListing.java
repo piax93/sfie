@@ -10,30 +10,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Fridge;
 import com.ifalot.sfie.util.FridgeListAdapter;
 
 public class FridgeListing extends Fragment {
 
-    protected static Fridge fridge;
-    protected static FridgeListAdapter fridgeListAdapter;
+    private FridgeListAdapter fridgeListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fridge_listing, container, false);
-        fridge = Fridge.load();
 
         ListView lv = (ListView) rootView.findViewById(R.id.fridge_list);
-        fridgeListAdapter = new FridgeListAdapter(getContext(), fridge);
+        fridgeListAdapter = new FridgeListAdapter(getContext(), (TextView) rootView.findViewById(R.id.enddate_alert));
         lv.setAdapter(fridgeListAdapter);
+        Fridge.getInstance().setViewUpdateListener(fridgeListAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.button_add_supplies);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(fridge.getSupplies().size() == 0){
+                if(Fridge.getInstance().getSupplies().size() == 0){
                     new AlertDialog.Builder(FridgeListing.this.getContext())
                         .setTitle("Error")
                         .setMessage("Not meals have been defined yet, so no ingredients are known")
@@ -44,6 +44,7 @@ public class FridgeListing extends Fragment {
             }
         });
 
+        fridgeListAdapter.update();
         return rootView;
     }
 
@@ -55,7 +56,7 @@ public class FridgeListing extends Fragment {
 
     @Override
     public void onPause() {
-        fridge.save();
+        Fridge.getInstance().save();
         super.onPause();
     }
 

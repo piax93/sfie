@@ -26,6 +26,7 @@ public class NewFood extends AppCompatActivity implements InputFilter {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_food);
+        setTitle("Add Food");
 
         Button addIngredient = (Button) findViewById(R.id.button_add_ingredient);
         Button saveFood = (Button) findViewById(R.id.button_save_food);
@@ -64,7 +65,7 @@ public class NewFood extends AppCompatActivity implements InputFilter {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.ingredient_wrapper, ingWrapper)).getChildAt(0);
+                ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.ingredient_wrapper, ingWrapper)).getChildAt(ingCount);
                 EditText et = (EditText) v.getChildAt(0);
                 et.setFilters(new InputFilter[] {NewFood.this});
                 ingCount++;

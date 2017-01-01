@@ -6,44 +6,52 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.ifalot.sfie.R;
+import com.ifalot.sfie.model.Fridge;
 
 import java.util.ArrayList;
 
 public class Shopping extends AppCompatActivity {
 
     private int itemCount = 0;
+    private ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
+        setTitle("Shopping");
 
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-                new ArrayList<>(FridgeListing.fridge.getSupplies().keySet()));
+        final Fridge fridge = Fridge.getInstance();
         final LinearLayout shoppingWrapper = (LinearLayout) findViewById(R.id.shopping_wrapper);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1,
+                new ArrayList<>(fridge.getSupplies().keySet()));
         Button addItem = (Button) findViewById(R.id.button_add_material);
         Button doneShopping = (Button) findViewById(R.id.button_save_shopping);
 
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemCount++;
-                ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.shopitem_wrapper, shoppingWrapper)).getChildAt(0);
+                ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.shopitem_wrapper, shoppingWrapper)).getChildAt(itemCount);
                 Spinner s = (Spinner) v.getChildAt(0);
                 s.setAdapter(spinnerAdapter);
+                itemCount++;
             }
         });
 
         doneShopping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean something = false;
                 for(int i = 0; i < itemCount; i++){
                     LinearLayout ll = (LinearLayout) shoppingWrapper.getChildAt(i);
                     Spinner name = (Spinner) ll.getChildAt(0);
                     EditText quant = (EditText) ll.getChildAt(1);
-                    FridgeListing.fridge.addSupply((String) name.getSelectedItem(),
-                            Float.parseFloat(quant.getText().toString()));
+                    if(quant.length() > 0) {
+                        something = true;
+                        fridge.addSupply((String) name.getSelectedItem(), Float.parseFloat(quant.getText().toString()));
+                    }
                 }
+                if(something) fridge.setTheEnd(-1);
                 Shopping.this.finish();
             }
         });

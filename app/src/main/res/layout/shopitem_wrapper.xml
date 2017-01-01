@@ -6,6 +6,7 @@
 
         <Spinner android:layout_width="0dp"
                  android:layout_weight="11"
+                 android:spinnerMode="dropdown"
                  android:layout_height="wrap_content"/>
 
         <EditText android:layout_width="0dp"

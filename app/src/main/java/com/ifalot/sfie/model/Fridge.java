@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import com.ifalot.sfie.util.Database;
+import com.ifalot.sfie.util.FridgeListAdapter;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,8 +13,11 @@ import java.util.Map;
 
 public class Fridge {
 
-    public static final String theEndTag = "theend";
+    private static final String theEndTag = "theend";
+    private static Fridge instance = null;
+
     private HashMap<String, Float> supplies;
+    private FridgeListAdapter viewAdapter;
     private Date theEnd;
     private boolean modified;
 
@@ -28,7 +32,12 @@ public class Fridge {
     }
 
     public void setTheEnd(long end){
-        theEnd = new Date(end);
+        if(end == -1) theEnd = null;
+        else theEnd = new Date(end);
+    }
+
+    public Date getTheEnd(){
+        return theEnd;
     }
 
     public void consume(Meal meal){
@@ -45,6 +54,7 @@ public class Fridge {
             if(theEnd == null) theEnd = meal.getDate();
             else if(meal.getDate().getTime() < theEnd.getTime()) theEnd = meal.getDate();
         }
+        viewAdapter.update();
     }
 
     public void vomit(Meal meal){
@@ -55,6 +65,7 @@ public class Fridge {
             base = base + e.getValue();
             supplies.put(e.getKey(), base);
         }
+        viewAdapter.update();
     }
 
     public void addSupply(String ingredient, float quantity){
@@ -67,6 +78,10 @@ public class Fridge {
         return supplies.get(ingredient);
     }
 
+    public void setViewUpdateListener(FridgeListAdapter fridgeListAdapter){
+        this.viewAdapter = fridgeListAdapter;
+    }
+
     public void save(){
         if(!modified) return;
         String query = "INSERT OR REPLACE INTO fridge (name, quantity) VALUES(?,?)";
@@ -77,8 +92,11 @@ public class Fridge {
                 Object[] args = { e.getKey(), e.getValue() };
                 db.execSQL(query, args);
             }
-            if(theEnd != null){
+            if(theEnd != null) {
                 Object[] args = { theEndTag, theEnd.getTime() };
+                db.execSQL(query, args);
+            } else {
+                Object[] args = { theEndTag, -1 };
                 db.execSQL(query, args);
             }
             db.setTransactionSuccessful();
@@ -87,7 +105,7 @@ public class Fridge {
         }
     }
 
-    public static Fridge load(){
+    private static Fridge load(){
         Cursor c = null;
         Fridge f = new Fridge();
         try {
@@ -106,6 +124,11 @@ public class Fridge {
             if(c != null) c.close();
         }
         return f;
+    }
+
+    public static Fridge getInstance(){
+        if(instance == null) instance = load();
+        return instance;
     }
 
 }

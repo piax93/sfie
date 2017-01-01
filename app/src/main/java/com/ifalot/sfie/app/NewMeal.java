@@ -25,7 +25,6 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
     public final static String extraNameString = "newMeal";
     private final static int NEW_FOOD_CODE = 123;
     private final static int DIALOG_ID = 23;
-    private final static String[] meal_type = { "Lunch", "Dinner" };
 
     private long date;
     private String dateString;
@@ -41,7 +40,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         valid = new ArrayList<>();
 
         final Spinner typeSpinner = (Spinner) findViewById(R.id.type_spinner);
-        typeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, meal_type));
+        typeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Meal.meal_type));
 
         EditText mealDate = (EditText) findViewById(R.id.meal_date);
         mealDate.setInputType(InputType.TYPE_NULL);
@@ -66,7 +65,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         saveMeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Meal meal = new Meal(date, meal_type[typeSpinner.getSelectedItemPosition()]);
+                Meal meal = new Meal(date, Meal.meal_type[typeSpinner.getSelectedItemPosition()]);
                 for(int i = 0; i < foods.size(); i++) if(valid.get(i)) meal.addFood(foods.get(i));
                 if(meal.getFoodCount() > 0 && dateString != null && dateString.length() > 0) {
                     Intent i = getIntent();
