@@ -44,7 +44,7 @@ public class MealCalendar {
         SQLiteDatabase db = Database.getDB();
         Cursor cursor = null, mealCursor = null;
         String query = "SELECT id, name, date FROM calendar WHERE date >= ? ORDER BY date";
-        String subquery = "SELECT id, name, ingredients FROM meal, food WHERE calendarid = ?";
+        String subquery = "SELECT id, name, ingredients FROM meal, food WHERE meal.foodid = food.id AND calendarid = ?";
         String topidquery = "SELECT MAX(id) FROM calendar";
         String[] selectionArgs = {String.valueOf(today.getTime())};
         try {

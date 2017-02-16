@@ -4,11 +4,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
+import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
 import com.ifalot.sfie.util.FridgeListAdapter;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Fridge {
@@ -16,7 +16,7 @@ public class Fridge {
     private static final String theEndTag = "theend";
     private static Fridge instance = null;
 
-    private HashMap<String, Float> supplies;
+    private CIHashMap<Float> supplies;
     private FridgeListAdapter viewAdapter;
     private Date theEnd;
     private boolean modified;
@@ -24,10 +24,10 @@ public class Fridge {
     Fridge(){
         theEnd = null;
         modified = false;
-        supplies = new HashMap<>();
+        supplies = new CIHashMap<>();
     }
 
-    public HashMap<String, Float> getSupplies(){
+    public CIHashMap<Float> getSupplies(){
         return this.supplies;
     }
 

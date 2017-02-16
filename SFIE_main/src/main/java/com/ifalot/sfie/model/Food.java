@@ -3,6 +3,7 @@ package com.ifalot.sfie.model;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
@@ -16,7 +17,7 @@ public class Food {
 
     int id;
     String name;
-    HashMap<String, Float> quantities;
+    CIHashMap<Float> quantities;
 
     public Food(){}
 
@@ -27,7 +28,7 @@ public class Food {
     public Food(int id, String name, String ingredients){
         this.id = id;
         this.name = name;
-        quantities = new HashMap<>();
+        quantities = new CIHashMap<>();
         if(ingredients != null){
             String[] ingrs = ingredients.split(String.valueOf(INGR_SEPARATOR));
             for(String i : ingrs){
@@ -70,7 +71,7 @@ public class Food {
         return quantities.keySet();
     }
 
-    public HashMap<String, Float> getQuantities() {
+    public CIHashMap<Float> getQuantities() {
         return quantities;
     }
 

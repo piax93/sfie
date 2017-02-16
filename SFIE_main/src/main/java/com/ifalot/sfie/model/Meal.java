@@ -2,6 +2,7 @@ package com.ifalot.sfie.model;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
 import org.parceler.Parcel;
 
@@ -96,8 +97,8 @@ public class Meal {
         }
     }
 
-    public HashMap<String, Float> getNeededIngredients(){
-        HashMap<String, Float> res = new HashMap<>();
+    public CIHashMap<Float> getNeededIngredients(){
+        CIHashMap<Float> res = new CIHashMap<>();
         for(Food f : foods){
             for(Map.Entry<String, Float> e : f.getQuantities().entrySet()){
                 if(res.containsKey(e.getKey())){
