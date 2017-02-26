@@ -28,7 +28,8 @@ public class Database {
                     "ingredients VARCHAR(1024) NOT NULL );");
             db.execSQL("CREATE TABLE IF NOT EXISTS fridge (" +
                     "name VARCHAR(255) PRIMARY KEY, " +
-                    "quantity REAL NOT NULL );");
+                    "quantity REAL NOT NULL, " +
+                    "theend BIGINT DEFAULT -1 );");
             Log.d("Database", "Tables successfully created");
         } catch (SQLException e){
             Log.d("Database", "Failed to init database: " + e);

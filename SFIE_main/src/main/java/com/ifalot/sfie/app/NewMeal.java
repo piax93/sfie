@@ -15,7 +15,6 @@ import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Food;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.util.Generic;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,7 +68,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
                 for(int i = 0; i < foods.size(); i++) if(valid.get(i)) meal.addFood(foods.get(i));
                 if(meal.getFoodCount() > 0 && dateString != null && dateString.length() > 0) {
                     Intent i = getIntent();
-                    i.putExtra(extraNameString, Parcels.wrap(meal));
+                    i.putExtra(extraNameString, meal);
                     setResult(Activity.RESULT_OK, i);
                     finish();
                 }else{
@@ -84,7 +83,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == NEW_FOOD_CODE && resultCode == RESULT_OK) {
-            Food food = Parcels.unwrap(data.getParcelableExtra(NewFood.newFoodExtraString));
+            Food food = data.getParcelableExtra(NewFood.newFoodExtraString);
             LinearLayout foodWrap = (LinearLayout) findViewById(R.id.foods_wrapper);
             TextView newFoodTV = new TextView(this);
             int pad = (int) (12 * getResources().getDisplayMetrics().density + 0.5f);

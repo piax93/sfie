@@ -17,4 +17,7 @@
 #}
 
 -keepattributes EnclosingMethod
--keepattributes InnerClasses
+# -keepattributes InnerClasses
+# -keep class * implements android.os.Parcelable {
+#  public static final android.os.Parcelable$Creator *;
+# }

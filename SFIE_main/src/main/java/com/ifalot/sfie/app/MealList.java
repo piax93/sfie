@@ -20,18 +20,18 @@ import com.ifalot.sfie.model.Fridge;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
 import com.ifalot.sfie.util.Generic;
-import org.parceler.Parcels;
 
+import java.util.Comparator;
 import java.util.Date;
 
-public class MealList extends Fragment {
+public class MealList extends Fragment implements Comparator<Meal> {
 
     private final static int NEW_MEAL_REQCODE = 11;
     private MealCalendar calendar;
     private ArrayAdapter<Meal> mealArrayAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_meal_list, container, false);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.button_add_meal);
@@ -72,9 +72,12 @@ public class MealList extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MealList.this.getContext(), MealDetail.class);
-                intent.putExtra(MealDetail.mealData, Parcels.wrap(mealArrayAdapter.getItem(i)));
-                startActivity(intent);
+                Meal m = mealArrayAdapter.getItem(i);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MealList.this.getContext());
+                builder.setTitle(m.toString());
+                builder.setMessage(m.getFoodDetailsToString());
+                builder.setNeutralButton("Close", null);
+                builder.show();
             }
         });
 
@@ -85,9 +88,10 @@ public class MealList extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == NEW_MEAL_REQCODE && resultCode == Activity.RESULT_OK){
-            Meal m = Parcels.unwrap(data.getParcelableExtra(NewMeal.extraNameString));
+            Meal m = data.getParcelableExtra(NewMeal.extraNameString);
             calendar.addMeal(m);
             mealArrayAdapter.add(m);
+            mealArrayAdapter.sort(this);
             Fridge.getInstance().consume(m);
         }
     }
@@ -97,6 +101,11 @@ public class MealList extends Fragment {
                 .getBoolean("showAll", false) ? new Date(0) : Generic.getMidnight());
         mealArrayAdapter.clear();
         mealArrayAdapter.addAll(calendar.getMeals());
+    }
+
+    @Override
+    public int compare(Meal e1, Meal e2) {
+        return (int)(e1.getDateLong() - e2.getDateLong());
     }
 
 }

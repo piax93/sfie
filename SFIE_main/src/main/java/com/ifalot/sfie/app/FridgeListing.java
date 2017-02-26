@@ -36,7 +36,7 @@ public class FridgeListing extends Fragment {
                 if(Fridge.getInstance().getSupplies().size() == 0){
                     new AlertDialog.Builder(FridgeListing.this.getContext())
                         .setTitle("Error")
-                        .setMessage("Not meals have been defined yet, so no ingredients are known")
+                        .setMessage("No meals have been defined yet, so no ingredients are known")
                         .setNeutralButton("Close", null).show();
                 }else {
                     startActivityForResult(new Intent(FridgeListing.this.getContext(), Shopping.class), 0);

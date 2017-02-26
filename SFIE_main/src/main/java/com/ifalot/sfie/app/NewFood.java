@@ -1,8 +1,8 @@
 package com.ifalot.sfie.app;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.*;
 import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Food;
 import com.ifalot.sfie.util.Generic;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -102,7 +101,7 @@ public class NewFood extends AppCompatActivity implements InputFilter {
                     food = foods.get(preloadedFoods.getSelectedItemPosition());
                 }
                 Intent i = getIntent();
-                i.putExtra(newFoodExtraString, Parcels.wrap(food));
+                i.putExtra(newFoodExtraString, food);
                 setResult(RESULT_OK, i);
                 finish();
             }
@@ -114,8 +113,10 @@ public class NewFood extends AppCompatActivity implements InputFilter {
 
     @Override
     public CharSequence filter(CharSequence charSequence, int start, int end, Spanned spanned, int i2, int i3) {
-        char c = charSequence.charAt(end-1);
-        if(c == Food.INGR_EQUAL || c == Food.INGR_SEPARATOR) return "";
+        try {
+            char c = charSequence.charAt(end - 1);
+            if (c == Food.INGR_EQUAL || c == Food.INGR_SEPARATOR) return "";
+        } catch (StringIndexOutOfBoundsException ignored) {}
         return null;
     }
 

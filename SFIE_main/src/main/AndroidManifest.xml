@@ -27,10 +27,6 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".app.MealDetail"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
                 android:name=".app.Shopping"
                 android:screenOrientation="portrait">
         </activity>

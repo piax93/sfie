@@ -9,6 +9,7 @@ import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Fridge;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Shopping extends AppCompatActivity {
 
@@ -25,6 +26,12 @@ public class Shopping extends AppCompatActivity {
         final LinearLayout shoppingWrapper = (LinearLayout) findViewById(R.id.shopping_wrapper);
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1,
                 new ArrayList<>(fridge.getSupplies().keySet()));
+        spinnerAdapter.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareTo(s2);
+            }
+        });
         Button addItem = (Button) findViewById(R.id.button_add_material);
         Button doneShopping = (Button) findViewById(R.id.button_save_shopping);
 
@@ -51,7 +58,7 @@ public class Shopping extends AppCompatActivity {
                         fridge.addSupply((String) name.getSelectedItem(), Float.parseFloat(quant.getText().toString()));
                     }
                 }
-                if(something) fridge.setTheEnd(-1);
+                if(something) fridge.updateTheEnd();
                 Shopping.this.finish();
             }
         });

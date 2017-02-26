@@ -2,28 +2,26 @@ package com.ifalot.sfie.model;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
-import org.parceler.Parcel;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Parcel
-public class Meal {
+public class Meal implements Parcelable {
 
     public final static String[] meal_type = { "Lunch", "Dinner" };
 
-    int id;
-    long date;
-    String type;
-    LinkedList<Food> foods;
-
-    public Meal(){}
+    private int id;
+    private long date;
+    private String type;
+    private LinkedList<Food> foods;
 
     public Meal(long date, String type){
         this.id = -1;
-        this.date = date;
+        this.date = date + (type.equals(meal_type[1]) ? 1 : 0);
         this.type = type;
         this.foods = new LinkedList<>();
     }
@@ -70,14 +68,14 @@ public class Meal {
         StringBuilder sb = new StringBuilder();
         for(Food f : foods){
             int i = 0;
-            sb.append("- ").append(f.getName()).append(" -> ");
+            sb.append("- ").append(f.getName()).append(" (");
             Set<String> ingrs = f.getIngredients();
             for(String ing : ingrs) {
                 i++;
                 sb.append(ing);
                 if(i != ingrs.size()) sb.append(", ");
             }
-            sb.append("\n");
+            sb.append(")\n");
         }
         return sb.toString();
     }
@@ -123,19 +121,54 @@ public class Meal {
         return new Date(date);
     }
 
+    public long getDateLong(){
+        return date;
+    }
+
     public String getType(){
         return type;
     }
 
     @Override
     public String toString() {
-        return type + " of " + new SimpleDateFormat("d MMM y").format(new Date(date));
+        return type + " of " + new SimpleDateFormat("EEE d MMM y", Locale.US).format(new Date(date));
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Meal) return id == ((Meal)obj).getId();
-        return false;
+        return obj instanceof Meal && id == ((Meal) obj).getId();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeLong(this.date);
+        dest.writeString(this.type);
+        dest.writeTypedList(this.foods);
+    }
+
+    protected Meal(Parcel in) {
+        this.id = in.readInt();
+        this.date = in.readLong();
+        this.type = in.readString();
+        this.foods = new LinkedList<>();
+        in.readTypedList(this.foods, Food.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
+        @Override
+        public Meal createFromParcel(Parcel source) {
+            return new Meal(source);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
 }

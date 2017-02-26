@@ -3,23 +3,23 @@ package com.ifalot.sfie.model;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
-import org.parceler.Parcel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
-@Parcel
-public class Food {
+public class Food implements Parcelable, Comparable {
 
     public static final char INGR_SEPARATOR = ';';
     public static final char INGR_EQUAL = ':';
 
-    int id;
-    String name;
-    CIHashMap<Float> quantities;
-
-    public Food(){}
+    private int id;
+    private String name;
+    private CIHashMap<Float> quantities;
 
     public Food(int id, String name){
         this(id, name, null);
@@ -108,7 +108,7 @@ public class Food {
 
     public static ArrayList<Food> getFoodsInDB(){
         SQLiteDatabase db = Database.getDB();
-        String query = "SELECT * FROM food";
+        String query = "SELECT * FROM food ORDER BY name";
         Cursor c = db.rawQuery(query, null);
         ArrayList<Food> res = new ArrayList<>();
         if(c.moveToFirst()){
@@ -117,6 +117,41 @@ public class Food {
         }
         c.close();
         return res;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeSerializable(this.quantities);
+    }
+
+    protected Food(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.quantities = (CIHashMap<Float>) in.readSerializable();
+    }
+
+    public static final Parcelable.Creator<Food> CREATOR = new Parcelable.Creator<Food>() {
+        @Override
+        public Food createFromParcel(Parcel source) {
+            return new Food(source);
+        }
+
+        @Override
+        public Food[] newArray(int size) {
+            return new Food[size];
+        }
+    };
+
+    @Override
+    public int compareTo(Object o) {
+        return name.compareTo(((Food)o).name);
     }
 
 }
