@@ -17,4 +17,6 @@
     <string name="title_activity_shopping">Shopping</string>
     <string name="done_shopping">Done Shopping</string>
     <string name="add_material">Add Shop Item</string>
+    <string name="title_activity_main_wrapper">SFIE</string>
+    <string name="action_settings">Settings</string>
 </resources>

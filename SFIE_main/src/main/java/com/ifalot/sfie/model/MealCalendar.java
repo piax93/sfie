@@ -6,40 +6,42 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import com.ifalot.sfie.util.Database;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TreeMap;
 
 public class MealCalendar {
 
     private TreeMap<Integer, Meal> meals;
     private int topid;
 
-    private MealCalendar(){
+    private MealCalendar() {
         topid = 0;
         meals = new TreeMap<>();
     }
 
-    public void addMeal(Meal meal){
+    public void addMeal(Meal meal) {
         if (meal.getId() == -1) {
             topid++;
             meal.setId(topid);
             String query = "INSERT INTO calendar VALUES(?, ?, ?)";
             SQLiteDatabase db = Database.getDB();
-            Object[] args = { topid, meal.getType(), meal.getDate().getTime() };
+            Object[] args = {topid, meal.getType(), meal.getDate().getTime()};
             db.execSQL(query, args);
             meal.insertIntoDatabase();
         }
         meals.put(meal.getId(), meal);
     }
 
-    public ArrayList<Meal> getMeals(){
+    public ArrayList<Meal> getMeals() {
         return new ArrayList<>(meals.values());
     }
 
-    private void setTopId(int topid){
+    private void setTopId(int topid) {
         this.topid = topid;
     }
 
-    public static MealCalendar getMealCalendar(Date today){
+    public static MealCalendar getMealCalendar(Date today) {
         MealCalendar tmp = new MealCalendar();
         SQLiteDatabase db = Database.getDB();
         Cursor cursor = null, mealCursor = null;
@@ -58,7 +60,7 @@ public class MealCalendar {
                     Meal meal = new Meal(new Date(mealDate), mealName);
                     meal.setId(mealId);
                     mealCursor = db.rawQuery(subquery, subArgs);
-                    if(mealCursor.moveToFirst()){
+                    if (mealCursor.moveToFirst()) {
                         do {
                             int foodid = mealCursor.getInt(0);
                             String foodName = mealCursor.getString(1);
@@ -76,8 +78,8 @@ public class MealCalendar {
         } catch (SQLiteException e) {
             Log.d("MealCalendar", "Failed to read database");
         } finally {
-            if(cursor != null) cursor.close();
-            if(mealCursor != null) mealCursor.close();
+            if (cursor != null) cursor.close();
+            if (mealCursor != null) mealCursor.close();
         }
         return tmp;
     }

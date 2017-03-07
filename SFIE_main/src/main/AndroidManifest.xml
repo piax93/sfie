@@ -10,12 +10,16 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".app.MainActivity"
+                android:name=".app.MainWrapper"
+                android:label="@string/title_activity_main_wrapper"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppThemeNoActionBar">
+                android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="piax93.github.io"/>
             </intent-filter>
         </activity>
         <activity

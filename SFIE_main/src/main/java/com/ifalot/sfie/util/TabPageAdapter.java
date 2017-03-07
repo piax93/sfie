@@ -3,14 +3,14 @@ package com.ifalot.sfie.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.ifalot.sfie.app.FridgeListing;
-import com.ifalot.sfie.app.MealList;
+import com.ifalot.sfie.app.FridgeListingFragment;
+import com.ifalot.sfie.app.MealListFragment;
 
-public class SFIEPageAdapter extends FragmentPagerAdapter {
+public class TabPageAdapter extends FragmentPagerAdapter {
 
     private String[] tabs;
 
-    public SFIEPageAdapter(FragmentManager fm, String[] tabs) {
+    public TabPageAdapter(FragmentManager fm, String[] tabs) {
         super(fm);
         this.tabs = tabs;
     }
@@ -18,8 +18,8 @@ public class SFIEPageAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int index) {
         Fragment f;
-        if(index == 0) f = new MealList();
-        else f = new FridgeListing();
+        if (index == 0) f = new MealListFragment();
+        else f = new FridgeListingFragment();
         return f;
     }
 

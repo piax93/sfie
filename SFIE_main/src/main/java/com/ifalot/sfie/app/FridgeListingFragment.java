@@ -15,7 +15,7 @@ import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Fridge;
 import com.ifalot.sfie.util.FridgeListAdapter;
 
-public class FridgeListing extends Fragment {
+public class FridgeListingFragment extends Fragment {
 
     private FridgeListAdapter fridgeListAdapter;
 
@@ -33,13 +33,13 @@ public class FridgeListing extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Fridge.getInstance().getSupplies().size() == 0){
-                    new AlertDialog.Builder(FridgeListing.this.getContext())
-                        .setTitle("Error")
-                        .setMessage("No meals have been defined yet, so no ingredients are known")
-                        .setNeutralButton("Close", null).show();
-                }else {
-                    startActivityForResult(new Intent(FridgeListing.this.getContext(), Shopping.class), 0);
+                if (Fridge.getInstance().getSupplies().size() == 0) {
+                    new AlertDialog.Builder(FridgeListingFragment.this.getContext())
+                            .setTitle("Error")
+                            .setMessage("No meals have been defined yet, so no ingredients are known")
+                            .setNeutralButton("Close", null).show();
+                } else {
+                    startActivityForResult(new Intent(FridgeListingFragment.this.getContext(), Shopping.class), 0);
                 }
             }
         });

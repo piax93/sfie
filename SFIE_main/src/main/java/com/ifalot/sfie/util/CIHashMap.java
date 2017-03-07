@@ -6,7 +6,7 @@ public class CIHashMap<T> extends HashMap<String, T> {
 
     @Override
     public T get(Object key) {
-        return super.get(((String)key).toLowerCase());
+        return super.get(((String) key).toLowerCase());
     }
 
     @Override

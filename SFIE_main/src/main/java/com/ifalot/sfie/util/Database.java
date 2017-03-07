@@ -11,7 +11,7 @@ public class Database {
     private static final String DBName = "SFIEDB";
     private static SQLiteDatabase db = null;
 
-    public static void initDatabase(Context context){
+    public static void initDatabase(Context context) {
         db = context.openOrCreateDatabase(DBName, Context.MODE_PRIVATE, null);
         try {
             db.execSQL("CREATE TABLE IF NOT EXISTS calendar (" +
@@ -31,12 +31,12 @@ public class Database {
                     "quantity REAL NOT NULL, " +
                     "theend BIGINT DEFAULT -1 );");
             Log.d("Database", "Tables successfully created");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             Log.d("Database", "Failed to init database: " + e);
         }
     }
 
-    public static SQLiteDatabase getDB(){
+    public static SQLiteDatabase getDB() {
         return db;
     }
 

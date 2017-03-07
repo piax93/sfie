@@ -12,40 +12,40 @@ import java.util.*;
 
 public class Meal implements Parcelable {
 
-    public final static String[] meal_type = { "Lunch", "Dinner" };
+    public final static String[] meal_type = {"Lunch", "Dinner"};
 
     private int id;
     private long date;
     private String type;
     private LinkedList<Food> foods;
 
-    public Meal(long date, String type){
+    public Meal(long date, String type) {
         this.id = -1;
         this.date = date + (type.equals(meal_type[1]) ? 1 : 0);
         this.type = type;
         this.foods = new LinkedList<>();
     }
 
-    public Meal(Date date, String name){
+    public Meal(Date date, String name) {
         this(date.getTime(), name);
     }
 
-    public void addFood(Food food){
+    public void addFood(Food food) {
         foods.add(food);
     }
 
-    public List<Food> getFoods(){
+    public List<Food> getFoods() {
         return foods;
     }
 
-    public Food getFood(String name){
-        for(Food f : foods){
-            if(f.getName().equals(name)) return f;
+    public Food getFood(String name) {
+        for (Food f : foods) {
+            if (f.getName().equals(name)) return f;
         }
         return null;
     }
 
-    public int getFoodCount(){
+    public int getFoodCount() {
         return foods.size();
     }
 
@@ -64,23 +64,23 @@ public class Meal implements Parcelable {
         }
     }
 
-    public String getFoodDetailsToString(){
+    public String getFoodDetailsToString() {
         StringBuilder sb = new StringBuilder();
-        for(Food f : foods){
+        for (Food f : foods) {
             int i = 0;
             sb.append("- ").append(f.getName()).append(" (");
             Set<String> ingrs = f.getIngredients();
-            for(String ing : ingrs) {
+            for (String ing : ingrs) {
                 i++;
                 sb.append(ing);
-                if(i != ingrs.size()) sb.append(", ");
+                if (i != ingrs.size()) sb.append(", ");
             }
             sb.append(")\n");
         }
         return sb.toString();
     }
 
-    public void deleteFromDatabase(){
+    public void deleteFromDatabase() {
         SQLiteDatabase db = Database.getDB();
         try {
             Object[] args = {id};
@@ -95,11 +95,11 @@ public class Meal implements Parcelable {
         }
     }
 
-    public CIHashMap<Float> getNeededIngredients(){
+    public CIHashMap<Float> getNeededIngredients() {
         CIHashMap<Float> res = new CIHashMap<>();
-        for(Food f : foods){
-            for(Map.Entry<String, Float> e : f.getQuantities().entrySet()){
-                if(res.containsKey(e.getKey())){
+        for (Food f : foods) {
+            for (Map.Entry<String, Float> e : f.getQuantities().entrySet()) {
+                if (res.containsKey(e.getKey())) {
                     res.put(e.getKey(), e.getValue() + res.get(e.getKey()));
                 } else {
                     res.put(e.getKey(), e.getValue());
@@ -109,23 +109,23 @@ public class Meal implements Parcelable {
         return res;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    public Date getDate(){
+    public Date getDate() {
         return new Date(date);
     }
 
-    public long getDateLong(){
+    public long getDateLong() {
         return date;
     }
 
-    public String getType(){
+    public String getType() {
         return type;
     }
 

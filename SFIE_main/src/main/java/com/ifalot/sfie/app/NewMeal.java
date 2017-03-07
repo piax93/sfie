@@ -46,7 +46,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         mealDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 showDialog(DIALOG_ID);
             }
@@ -56,7 +56,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         addFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            startActivityForResult(new Intent(NewMeal.this, NewFood.class), NEW_FOOD_CODE);
+                startActivityForResult(new Intent(NewMeal.this, NewFood.class), NEW_FOOD_CODE);
             }
         });
 
@@ -65,13 +65,13 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
             @Override
             public void onClick(View view) {
                 Meal meal = new Meal(date, Meal.meal_type[typeSpinner.getSelectedItemPosition()]);
-                for(int i = 0; i < foods.size(); i++) if(valid.get(i)) meal.addFood(foods.get(i));
-                if(meal.getFoodCount() > 0 && dateString != null && dateString.length() > 0) {
+                for (int i = 0; i < foods.size(); i++) if (valid.get(i)) meal.addFood(foods.get(i));
+                if (meal.getFoodCount() > 0 && dateString != null && dateString.length() > 0) {
                     Intent i = getIntent();
                     i.putExtra(extraNameString, meal);
                     setResult(Activity.RESULT_OK, i);
                     finish();
-                }else{
+                } else {
                     Generic.fastErrorDialog(NewMeal.this, "Some fields are emtpy");
                 }
             }
@@ -82,7 +82,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == NEW_FOOD_CODE && resultCode == RESULT_OK) {
+        if (requestCode == NEW_FOOD_CODE && resultCode == RESULT_OK) {
             Food food = data.getParcelableExtra(NewFood.newFoodExtraString);
             LinearLayout foodWrap = (LinearLayout) findViewById(R.id.foods_wrapper);
             TextView newFoodTV = new TextView(this);
@@ -107,15 +107,15 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        if(id == DIALOG_ID){
+        if (id == DIALOG_ID) {
             EditText et = (EditText) findViewById(R.id.meal_date);
             int day, month, year;
-            if(et.getText().length() == 0){
+            if (et.getText().length() == 0) {
                 Calendar c = Calendar.getInstance();
                 year = c.get(Calendar.YEAR);
                 month = c.get(Calendar.MONTH);
                 day = c.get(Calendar.DAY_OF_MONTH);
-            }else{
+            } else {
                 String[] tmp = et.getText().toString().split("-");
                 year = Integer.parseInt(tmp[0]);
                 month = Integer.parseInt(tmp[1]) - 1;
@@ -131,7 +131,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
-        if(compareDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH),
+        if (compareDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH),
                 year, monthOfYear, dayOfMonth)) {
             EditText et = (EditText) findViewById(R.id.meal_date);
             dateString = String.valueOf(year) + '-' + (monthOfYear + 1) + '-' + dayOfMonth;
@@ -142,7 +142,7 @@ public class NewMeal extends AppCompatActivity implements DatePickerDialog.OnDat
         }
     }
 
-    private boolean compareDate(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay){
+    private boolean compareDate(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay) {
         return endYear > startYear
                 || (endYear == startYear && endMonth > startMonth)
                 || (endYear == startYear && endMonth == startMonth && endDay >= startDay);

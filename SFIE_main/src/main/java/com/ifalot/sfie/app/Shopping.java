@@ -49,16 +49,16 @@ public class Shopping extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 boolean something = false;
-                for(int i = 0; i < itemCount; i++){
+                for (int i = 0; i < itemCount; i++) {
                     LinearLayout ll = (LinearLayout) shoppingWrapper.getChildAt(i);
                     Spinner name = (Spinner) ll.getChildAt(0);
                     EditText quant = (EditText) ll.getChildAt(1);
-                    if(quant.length() > 0) {
+                    if (quant.length() > 0) {
                         something = true;
                         fridge.addSupply((String) name.getSelectedItem(), Float.parseFloat(quant.getText().toString()));
                     }
                 }
-                if(something) fridge.updateTheEnd();
+                if (something) fridge.updateTheEnd();
                 Shopping.this.finish();
             }
         });

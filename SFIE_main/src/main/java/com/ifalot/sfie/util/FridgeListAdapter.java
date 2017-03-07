@@ -14,7 +14,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class FridgeListAdapter extends ArrayAdapter<String>{
+public class FridgeListAdapter extends ArrayAdapter<String> {
 
     private TextView theendtv;
 
@@ -27,24 +27,24 @@ public class FridgeListAdapter extends ArrayAdapter<String>{
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view;
-        if(convertView == null) view = inflater.inflate(R.layout.fridge_list_item, parent, false);
+        if (convertView == null) view = inflater.inflate(R.layout.fridge_list_item, parent, false);
         else view = convertView;
 
         String ing = this.getItem(position);
         Float quant = Fridge.getInstance().getQuantity(ing);
-        ((TextView)view.findViewById(R.id.ingr_tv)).setText(ing);
-        ((TextView)view.findViewById(R.id.quant_tv)).setText(quant.toString());
-        if(quant < 0) view.setBackgroundColor(Color.RED);
+        ((TextView) view.findViewById(R.id.ingr_tv)).setText(ing);
+        ((TextView) view.findViewById(R.id.quant_tv)).setText(quant.toString());
+        if (quant < 0) view.setBackgroundColor(Color.RED);
         else view.setBackgroundColor(Color.WHITE);
 
         return view;
     }
 
-    public void update(){
+    public void update() {
         super.clear();
         super.addAll(new ArrayList<>(Fridge.getInstance().getSupplies().keySet()));
         Date theend = Fridge.getInstance().getTheEnd();
-        if(theend != null) {
+        if (theend != null) {
             theendtv.setBackgroundColor(Color.YELLOW);
             theendtv.setText("You must go shopping before " + DateFormat.getDateInstance().format(theend));
         } else {

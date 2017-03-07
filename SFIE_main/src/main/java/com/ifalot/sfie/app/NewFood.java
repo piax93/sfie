@@ -42,13 +42,12 @@ public class NewFood extends AppCompatActivity implements InputFilter {
         preloadedFoods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != foods.size()-1) {
+                if (i != foods.size() - 1) {
                     isNewFood = false;
                     ingrDisplay.setText(foods.get(i).getIngredientsInNiceListing());
                     newFoodWrap.setVisibility(View.GONE);
                     ingrDisplay.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     isNewFood = true;
                     ingrDisplay.setVisibility(View.GONE);
                     newFoodWrap.setVisibility(View.VISIBLE);
@@ -66,7 +65,7 @@ public class NewFood extends AppCompatActivity implements InputFilter {
             public void onClick(View view) {
                 ViewGroup v = (ViewGroup) ((ViewGroup) getLayoutInflater().inflate(R.layout.ingredient_wrapper, ingWrapper)).getChildAt(ingCount);
                 EditText et = (EditText) v.getChildAt(0);
-                et.setFilters(new InputFilter[] {NewFood.this});
+                et.setFilters(new InputFilter[]{NewFood.this});
                 ingCount++;
             }
         });
@@ -75,7 +74,7 @@ public class NewFood extends AppCompatActivity implements InputFilter {
             @Override
             public void onClick(View view) {
                 Food food;
-                if(isNewFood) {
+                if (isNewFood) {
                     EditText foodName = (EditText) findViewById(R.id.food_name);
                     if (foodName.length() == 0) {
                         Generic.fastErrorDialog(NewFood.this, "Food name can't be empty");
@@ -116,7 +115,8 @@ public class NewFood extends AppCompatActivity implements InputFilter {
         try {
             char c = charSequence.charAt(end - 1);
             if (c == Food.INGR_EQUAL || c == Food.INGR_SEPARATOR) return "";
-        } catch (StringIndexOutOfBoundsException ignored) {}
+        } catch (StringIndexOutOfBoundsException ignored) {
+        }
         return null;
     }
 
