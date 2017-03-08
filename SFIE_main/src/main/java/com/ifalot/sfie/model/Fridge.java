@@ -38,6 +38,7 @@ public class Fridge {
             if (e > 0 && e < theEnd) theEnd = e;
         }
         if (theEnd == Long.MAX_VALUE) theEnd = -1;
+        viewAdapter.update();
     }
 
     public Date getTheEnd() {
@@ -70,14 +71,14 @@ public class Fridge {
         for (Map.Entry<String, Float> e : meal.getNeededIngredients().entrySet()) {
             addSupply(e.getKey(), e.getValue());
         }
-        viewAdapter.update();
+        updateTheEnd();
     }
 
     public void addSupply(String ingredient, float quantity) {
         modified = true;
         if (supplies.containsKey(ingredient)) quantity += supplies.get(ingredient);
         supplies.put(ingredient, quantity);
-        if (quantity > 0f) theends.put(ingredient, -1L);
+        if (quantity >= -0.01f) theends.put(ingredient, -1L);
     }
 
     public Float getQuantity(String ingredient) {

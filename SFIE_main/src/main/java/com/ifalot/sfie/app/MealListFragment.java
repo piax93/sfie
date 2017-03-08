@@ -36,7 +36,6 @@ public class MealListFragment extends Fragment implements Comparator<Meal>, Tool
         View rootView = inflater.inflate(R.layout.fragment_meal_list, container, false);
 
         setHasOptionsMenu(true);
-        ((Toolbar) getActivity().findViewById(R.id.toolbar)).setOnMenuItemClickListener(this);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.button_add_meal);
         fab.setOnClickListener(new View.OnClickListener() {

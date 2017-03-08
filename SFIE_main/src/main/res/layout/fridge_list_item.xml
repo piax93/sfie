@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="horizontal"
                 android:padding="8dp"
                 android:layout_width="match_parent"
@@ -7,18 +7,16 @@
 
     <TextView android:id="@+id/ingr_tv"
               android:textSize="13pt"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentTop="true"
-              android:layout_alignParentLeft="true"
-              android:layout_alignParentStart="true"/>
+              android:layout_weight="0.66"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content" />
 
     <TextView android:id="@+id/quant_tv"
               android:textSize="13pt"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentTop="true"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentEnd="true"/>
+              android:layout_weight="0.34"
+              android:layout_width="0dp"
+              android:textAlignment="textEnd"
+              android:layout_gravity="end"
+              android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+</LinearLayout>

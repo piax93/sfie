@@ -1,6 +1,7 @@
 package com.ifalot.sfie.app;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import com.ifalot.sfie.R;
@@ -15,6 +16,20 @@ public class MainWrapper extends AppCompatActivity {
         Database.initDatabase(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_view, new TabsFragment())
+                .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager sfm = getSupportFragmentManager();
+        if (sfm.getBackStackEntryCount() > 0) {
+            sfm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

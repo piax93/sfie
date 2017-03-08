@@ -26,7 +26,8 @@ android {
             signingConfig getSigningConfig()
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent, "SFIE-v" + versionName + "_release.apk")
+                    output.outputFile = new File((String)output.outputFile.parent,
+                            "SFIE-v" + ((String)versionName) + "_release.apk")
                 }
             }
         }

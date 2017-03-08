@@ -18,7 +18,7 @@ public class TabsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tabs, container);
+        View view = inflater.inflate(R.layout.fragment_tabs, container, false);
         TabPageAdapter pageAdapter = new TabPageAdapter(getActivity().getSupportFragmentManager(), tabs);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.main_pager);
         viewPager.setAdapter(pageAdapter);

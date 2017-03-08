@@ -1,8 +1,6 @@
 package com.ifalot.sfie.app;
 
-
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,15 +15,13 @@ import com.ifalot.sfie.util.FridgeListAdapter;
 
 public class FridgeListingFragment extends Fragment {
 
-    private FridgeListAdapter fridgeListAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fridge_listing, container, false);
 
         ListView lv = (ListView) rootView.findViewById(R.id.fridge_list);
-        fridgeListAdapter = new FridgeListAdapter(getContext(), (TextView) rootView.findViewById(R.id.enddate_alert));
+        FridgeListAdapter fridgeListAdapter = new FridgeListAdapter(getContext(), (TextView) rootView.findViewById(R.id.enddate_alert));
         lv.setAdapter(fridgeListAdapter);
         Fridge.getInstance().setViewUpdateListener(fridgeListAdapter);
 
@@ -39,19 +35,19 @@ public class FridgeListingFragment extends Fragment {
                             .setMessage("No meals have been defined yet, so no ingredients are known")
                             .setNeutralButton("Close", null).show();
                 } else {
-                    startActivityForResult(new Intent(FridgeListingFragment.this.getContext(), Shopping.class), 0);
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.slide_out_right,
+                                    android.R.anim.fade_in, android.R.anim.slide_out_right)
+                            .add(R.id.main_view, new ShoppingFragment())
+                            .addToBackStack(null)
+                            .commit();
                 }
             }
         });
 
         fridgeListAdapter.update();
         return rootView;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        fridgeListAdapter.update();
     }
 
     @Override

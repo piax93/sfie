@@ -48,7 +48,7 @@ public class FridgeListAdapter extends ArrayAdapter<String> {
             theendtv.setBackgroundColor(Color.YELLOW);
             theendtv.setText("You must go shopping before " + DateFormat.getDateInstance().format(theend));
         } else {
-            theendtv.setBackgroundColor(Color.WHITE);
+            theendtv.setBackgroundColor(Color.parseColor("#D0FFD0"));
             theendtv.setText("You will be ok for a while");
         }
     }
