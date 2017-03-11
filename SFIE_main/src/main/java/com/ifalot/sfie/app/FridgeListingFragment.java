@@ -39,7 +39,7 @@ public class FridgeListingFragment extends Fragment {
                             .beginTransaction()
                             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.slide_out_right,
                                     android.R.anim.fade_in, android.R.anim.slide_out_right)
-                            .add(R.id.main_view, new ShoppingFragment())
+                            .add(R.id.main_view, new ShoppingFragment(), ShoppingFragment.FRAG_TAG)
                             .addToBackStack(null)
                             .commit();
                 }

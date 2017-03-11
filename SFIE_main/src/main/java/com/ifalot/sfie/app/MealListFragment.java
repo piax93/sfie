@@ -1,12 +1,11 @@
 package com.ifalot.sfie.app;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -19,14 +18,14 @@ import com.ifalot.sfie.R;
 import com.ifalot.sfie.model.Fridge;
 import com.ifalot.sfie.model.Meal;
 import com.ifalot.sfie.model.MealCalendar;
+import com.ifalot.sfie.util.FragmentResultListener;
 import com.ifalot.sfie.util.Generic;
 
 import java.util.Comparator;
 import java.util.Date;
 
-public class MealListFragment extends Fragment implements Comparator<Meal>, Toolbar.OnMenuItemClickListener {
+public class MealListFragment extends Fragment implements Comparator<Meal>, Toolbar.OnMenuItemClickListener, FragmentResultListener {
 
-    private final static int NEW_MEAL_REQCODE = 11;
     private boolean showAll;
     private MealCalendar calendar;
     private ArrayAdapter<Meal> mealArrayAdapter;
@@ -36,13 +35,19 @@ public class MealListFragment extends Fragment implements Comparator<Meal>, Tool
         View rootView = inflater.inflate(R.layout.fragment_meal_list, container, false);
 
         setHasOptionsMenu(true);
+        ((Toolbar)getActivity().findViewById(R.id.toolbar)).setOnMenuItemClickListener(this);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.button_add_meal);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MealListFragment.this.getContext(), NewMeal.class);
-                startActivityForResult(i, NEW_MEAL_REQCODE);
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.slide_out_right,
+                                android.R.anim.fade_in, android.R.anim.slide_out_right)
+                        .add(R.id.main_view, new NewMealFragment(), NewMealFragment.FRAG_TAG)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -94,15 +99,12 @@ public class MealListFragment extends Fragment implements Comparator<Meal>, Tool
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_MEAL_REQCODE && resultCode == Activity.RESULT_OK) {
-            Meal m = data.getParcelableExtra(NewMeal.extraNameString);
-            calendar.addMeal(m);
-            mealArrayAdapter.add(m);
-            mealArrayAdapter.sort(this);
-            Fridge.getInstance().consume(m);
-        }
+    public void onFragmentResult(Fragment caller, Object result) {
+        Meal m = (Meal) result;
+        calendar.addMeal(m);
+        mealArrayAdapter.add(m);
+        mealArrayAdapter.sort(this);
+        Fridge.getInstance().consume(m);
     }
 
     private void reload() {

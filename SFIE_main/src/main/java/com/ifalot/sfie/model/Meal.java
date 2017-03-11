@@ -2,15 +2,13 @@ package com.ifalot.sfie.model;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Parcel;
-import android.os.Parcelable;
 import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Meal implements Parcelable {
+public class Meal {
 
     public final static String[] meal_type = {"Lunch", "Dinner"};
 
@@ -139,36 +137,4 @@ public class Meal implements Parcelable {
         return obj instanceof Meal && id == ((Meal) obj).getId();
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeLong(this.date);
-        dest.writeString(this.type);
-        dest.writeTypedList(this.foods);
-    }
-
-    protected Meal(Parcel in) {
-        this.id = in.readInt();
-        this.date = in.readLong();
-        this.type = in.readString();
-        this.foods = new LinkedList<>();
-        in.readTypedList(this.foods, Food.CREATOR);
-    }
-
-    public static final Parcelable.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
-        @Override
-        public Meal createFromParcel(Parcel source) {
-            return new Meal(source);
-        }
-
-        @Override
-        public Meal[] newArray(int size) {
-            return new Meal[size];
-        }
-    };
 }

@@ -13,6 +13,7 @@ import com.ifalot.sfie.util.TabPageAdapter;
 
 public class TabsFragment extends Fragment {
 
+    static final String FRAG_TAG = "TabsFragment";
     private final String[] tabs = {"MEAL LIST", "FRIDGE"};
 
     @Nullable

@@ -3,8 +3,6 @@ package com.ifalot.sfie.model;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Parcel;
-import android.os.Parcelable;
 import com.ifalot.sfie.util.CIHashMap;
 import com.ifalot.sfie.util.Database;
 
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class Food implements Parcelable, Comparable {
+public class Food implements Comparable {
 
     public static final char INGR_SEPARATOR = ';';
     public static final char INGR_EQUAL = ':';
@@ -67,11 +65,11 @@ public class Food implements Parcelable, Comparable {
         return sb.toString();
     }
 
-    public Set<String> getIngredients() {
+    Set<String> getIngredients() {
         return quantities.keySet();
     }
 
-    public CIHashMap<Float> getQuantities() {
+    CIHashMap<Float> getQuantities() {
         return quantities;
     }
 
@@ -118,36 +116,6 @@ public class Food implements Parcelable, Comparable {
         c.close();
         return res;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.name);
-        dest.writeSerializable(this.quantities);
-    }
-
-    protected Food(Parcel in) {
-        this.id = in.readInt();
-        this.name = in.readString();
-        this.quantities = (CIHashMap<Float>) in.readSerializable();
-    }
-
-    public static final Parcelable.Creator<Food> CREATOR = new Parcelable.Creator<Food>() {
-        @Override
-        public Food createFromParcel(Parcel source) {
-            return new Food(source);
-        }
-
-        @Override
-        public Food[] newArray(int size) {
-            return new Food[size];
-        }
-    };
 
     @Override
     public int compareTo(Object o) {

@@ -17,6 +17,7 @@ import java.util.Comparator;
 
 public class ShoppingFragment extends Fragment {
 
+    final static String FRAG_TAG = "ShoppingFragment";
     private int itemCount = 0;
     private ArrayAdapter<String> spinnerAdapter;
 
